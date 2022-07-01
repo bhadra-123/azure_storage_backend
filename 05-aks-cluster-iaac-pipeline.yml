@@ -17,8 +17,8 @@ steps:
 - task: replacetokens@5
   displayName: Replace Secrets
   inputs:
-    rootDirectory: './configuration/iaac/azure/kubernetes/'
-    targetFiles: './configuration/iaac/azure/kubernetes/variables.tf'
+    rootDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes/'
+    targetFiles: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes/variables.tf'
     encoding: 'auto'
     tokenPattern: 'doublebraces'
     writeBOM: true
