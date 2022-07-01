@@ -14,7 +14,7 @@ steps:
 #   displayName: Terraform Install
 #   inputs:
 #     terraformVersion: latest
-- task: TerraformInstaller@0
+- task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
   inputs:
     terraformVersion: 'latest'
 - task: TerraformTaskV3@3
