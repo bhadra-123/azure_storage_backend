@@ -14,6 +14,22 @@ steps:
 #   displayName: Terraform Install
 #   inputs:
 #     terraformVersion: latest
+- task: replacetokens@5
+  displayName: Replace Secrets
+  inputs:
+    rootDirectory: 'CoveoTokenService'
+    targetFiles: './configuration/iaac/azure/kubernetes/variables.tf'
+    encoding: 'auto'
+    tokenPattern: 'doublebraces'
+    writeBOM: true
+    actionOnMissing: 'warn'
+    keepToken: false
+    actionOnNoFiles: 'continue'
+    enableTransforms: false
+    enableRecursion: false
+    useLegacyPattern: false
+    enableTelemetry: true
+
 - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
   inputs:
     terraformVersion: 'latest'
@@ -22,8 +38,8 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
-    commandOptions: -var client_id="$(client_id)" -var client_secret="$(client_secret)" -var ssh_public_key="$(azure_rsa_public_key.secureFilePath)"
+    #workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+    #commandOptions: -var client_id="$(client_id)" -var client_secret="$(client_secret)" -var ssh_public_key="$(azure_rsa_public_key.secureFilePath)"
     backendServiceArm: 'azure-service-principal-svc'
     backendAzureRmResourceGroupName: 'terraform_backend_rg'
     backendAzureRmStorageAccountName: 'terraformbackendy0atkkv8'
@@ -36,5 +52,5 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    commandOptions: '-var client_id="$(client_id)" -var client_secret="$(client_secret)" -var ssh_public_key="$(azure_rsa_public_key.secureFilePath)"'
+    #commandOptions: '-var client_id="$(client_id)" -var client_secret="$(client_secret)" -var ssh_public_key="$(azure_rsa_public_key.secureFilePath)"'
     environmentServiceNameAzureRM: 'azure-service-principal-svc'
