@@ -10,6 +10,10 @@ steps:
   name: azure_rsa_public_key
   inputs:
     secureFile: 'azure_rsa.pub'
+- task: TerraformInstaller@0
+  displayName: Terraform Install
+  inputs:
+    terraformVersion: 'latest'
 - task: TerraformTaskV3@3
   displayName: Terraform Init
   inputs:
