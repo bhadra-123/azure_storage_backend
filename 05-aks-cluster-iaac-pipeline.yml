@@ -1,0 +1,23 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: DownloadSecureFile@1
+  displayName: Download Public Key
+  name: azure_rsa_public_key
+  inputs:
+    secureFile: 'azure_rsa.pub'
+- task: TerraformTaskV3@3
+  displayName: Terraform Init
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+    backendServiceArm: 'azure-service-principal-svc'
+    backendAzureRmResourceGroupName: 'terraform_backend_rg'
+    backendAzureRmStorageAccountName: 'terraformbackendstinkr5f'
+    backendAzureRmContainerName: 'blob-container-1-origin-dev-eu'
+    backendAzureRmKey: 'terraform.tfstate'
