@@ -16,11 +16,6 @@ pipeline {
     ARM_SUBSCRIPTION_ID = credentials("SUBSCRIPTION_ID")
     ARM_CLIENT_ID       = credentials("CLIENT_ID")
     ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")
-    /* Not Working
-    TENANT_ID       = credentials("TENANT_ID")
-    SUBSCRIPTION_ID = credentials("SUBSCRIPTION_ID")
-    CLIENT_ID       = credentials("CLIENT_ID")
-    CLIENT_SECRET   = credentials("CLIENT_SECRET") */
   }
 
   stages {
@@ -31,9 +26,6 @@ pipeline {
             sh (script: 'az account clear', returnStatus: true)
             sh 'az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID'
             sh 'az account set -s $ARM_SUBSCRIPTION_ID'
-            /* Not working
-            sh 'az login --service-principal -u $CLIENT_ID -p $CLIENT_SECRET -t $TENANT_ID'
-            sh 'az account set -s $SUBSCRIPTION_ID' */
             sh 'az account show'
             sh 'terraform init'
             sh 'printenv'
