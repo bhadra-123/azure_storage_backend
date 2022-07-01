@@ -29,7 +29,6 @@ steps:
     enableRecursion: false
     useLegacyPattern: false
     enableTelemetry: true
-
 - task: ms-devlabs.custom-terraform-tasks.custom-terraform-installer-task.TerraformInstaller@0
   inputs:
     terraformVersion: 'latest'
