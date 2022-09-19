@@ -4,7 +4,6 @@
 
 Owner       = "bhadrareddy.origin@gmail.com"
 Reason      = "ticket-12345"
-Environment = "dev"
 location_short = "eu"
 
 #----------------
