@@ -25,7 +25,7 @@ genericPipeline {
     ],
   ]
 
-  Environment         = env.Environment ? env.Environment : "dev"
+  //Environment         = env.Environment ? env.Environment : "dev"
   ARM_SUBSCRIPTION_ID = env.ARM_SUBSCRIPTION_ID ? config.find{ it.key == env.ARM_SUBSCRIPTION_ID }?.value.ARM_SUBSCRIPTION_ID : config["dev"].ARM_SUBSCRIPTION_ID
   ARM_TENANT_ID = env.ARM_TENANT_ID ? config.find{ it.key == env.ARM_TENANT_ID }?.value.ARM_TENANT_ID : config["dev"].ARM_TENANT_ID
   ARM_CLIENT_ID = env.ARM_CLIENT_ID ? config.find{ it.key == env.ARM_CLIENT_ID }?.value.ARM_CLIENT_ID : config["dev"].ARM_CLIENT_ID
