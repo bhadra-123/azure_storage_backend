@@ -19,6 +19,7 @@ pipeline {
     stage("Environment") {
       environment {
         ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+        SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
         ARM_TENANT_ID           = credentials("TENANT_ID")
         ARM_CLIENT_ID           = credentials("CLIENT_ID")
         ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
@@ -29,13 +30,11 @@ pipeline {
           when {
             expression { Environment.equals("dev") }
           }
-          steps {  
-            environment {
-              ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-              ARM_TENANT_ID           = credentials("TENANT_ID")
-              ARM_CLIENT_ID           = credentials("CLIENT_ID")
-              ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET") 
-            }
+          environment {
+            ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+          }
+          steps {
+            echo "ARM_SUBSCRIPTION_ID = ${env.ARM_SUBSCRIPTION_ID}" 
           }
         }
 
