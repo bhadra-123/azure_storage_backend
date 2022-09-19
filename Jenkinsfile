@@ -66,7 +66,7 @@ pipeline {
           steps {
             script {
               sh '''
-                terraform plan -var Environment='"'$Environment'"'
+                terraform plan -var Environment=$Environment
               '''          
             }
           }

@@ -10,7 +10,7 @@ location_short = "eu"
 # RESOURCE GROUP
 #----------------
 
-resource_group_name = "terraformbackendrg"
+resource_group_name = "terraform-backend-rg"
 location            = "East US"
 
 #----------------
