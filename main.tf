@@ -14,7 +14,7 @@ resource "random_string" "myrandom" {
 #----------------
 
 resource "azurerm_resource_group" "resource_group" {
-  name     = var.resource_group_name
+  name     = "${local.resource_prefix}-${var.resource_group_name}"
   location = var.location
   tags     = local.common_tags
 }
@@ -27,7 +27,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   depends_on = [
     azurerm_resource_group.resource_group
   ]
-  name                     = "${var.blob_storage_account_name}${random_string.myrandom.id}"
+  name                     = "${local.resource_prefix}-${var.blob_storage_account_name}${random_string.myrandom.id}"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = var.blob_storage_account_tier
@@ -46,7 +46,7 @@ resource "azurerm_storage_container" "blob_storage_container" {
     azurerm_storage_account.blob_storage_account
   ]
   count                 = length(var.blob_storage_container_names)
-  name                  = "${var.blob_storage_container_names[count.index]}-${var.naming_suffix}"
+  name                  = "${local.resource_prefix}-${var.blob_storage_container_names[count.index]}"
   storage_account_name  = azurerm_storage_account.blob_storage_account.name
   container_access_type = var.blob_storage_container_access_type
 }

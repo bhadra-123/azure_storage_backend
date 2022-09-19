@@ -5,6 +5,7 @@
 Owner       = "bhadrareddy.origin@gmail.com"
 Reason      = "Ticket-12345"
 Environment = "Dev"
+location_short = "eu"
 
 #----------------
 # RESOURCE GROUP

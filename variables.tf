@@ -7,6 +7,8 @@ variable "Reason" {}
 
 variable "Environment" {}
 
+variable "location_short" {}
+
 #----------------
 # RESOURCE GROUP
 #----------------
@@ -33,7 +35,5 @@ variable "blob_storage_account_is_hns_enabled" {}
 #----------------
 
 variable "blob_storage_container_names" {}
-
-variable "naming_suffix" {}
 
 variable "blob_storage_container_access_type" {}
