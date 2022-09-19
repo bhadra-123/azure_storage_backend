@@ -12,16 +12,16 @@ genericPipeline {
 
   config = [
     "dev": [
-      ARM_SUBSCRIPTION_ID = credentials("HUB_SUBSCRIPTION_ID")
-      ARM_TENANT_ID       = credentials("TENANT_ID")
-      ARM_CLIENT_ID       = credentials("CLIENT_ID")
-      ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")
+      ARM_SUBSCRIPTION_ID : credentials("HUB_SUBSCRIPTION_ID"),
+      ARM_TENANT_ID       : credentials("TENANT_ID"),
+      ARM_CLIENT_ID       : credentials("CLIENT_ID"),
+      ARM_CLIENT_SECRET   : credentials("CLIENT_SECRET")
     ],
     "prod": [
-      ARM_SUBSCRIPTION_ID = credentials("SPOKE_SUBSCRIPTION_ID")
-      ARM_TENANT_ID       = credentials("TENANT_ID")
-      ARM_CLIENT_ID       = credentials("CLIENT_ID")
-      ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")
+      ARM_SUBSCRIPTION_ID : credentials("SPOKE_SUBSCRIPTION_ID"),
+      ARM_TENANT_ID       : credentials("TENANT_ID"),
+      ARM_CLIENT_ID       : credentials("CLIENT_ID"),
+      ARM_CLIENT_SECRET   : credentials("CLIENT_SECRET")
     ],
   ]
 
