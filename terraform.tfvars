@@ -11,14 +11,14 @@ location_short = "eu"
 # RESOURCE GROUP
 #----------------
 
-resource_group_name = "rg"
+resource_group_name = "terraform-backend-rg"
 location            = "East US"
 
 #----------------
 # BLOB CONTAINER
 #----------------
 
-blob_storage_account_name             = "terraformbackend"
+blob_storage_account_name             = "terraformbackendstorage"
 blob_storage_account_tier             = "Standard"
 blob_storage_account_replication_type = "LRS"
 blob_storage_account_kind             = "StorageV2"
