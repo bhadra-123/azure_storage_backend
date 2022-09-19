@@ -26,13 +26,20 @@ pipeline {
 
     stage ('Init') {
         steps {
-            sh (script: "rm -r ./.terraform", returnStatus: true)
-            sh (script: 'az account clear', returnStatus: true)
-            sh 'az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID'
-            sh 'az account set -s $ARM_SUBSCRIPTION_ID'
-            sh 'az account show'
-            sh 'terraform init'
-            sh 'printenv'
+            // sh (script: 'az account clear', returnStatus: true)
+            // sh 'az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID'
+            // sh 'az account set -s $ARM_SUBSCRIPTION_ID'
+            // sh 'az account show'
+            // sh 'terraform init'
+            // sh 'printenv'
+            sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $ARM_SUBSCRIPTION_ID
+                az account show
+                printenv
+                terraform init
+            '''            
         }
     }
 
@@ -45,23 +52,23 @@ pipeline {
         }
     }
 
-    stage ('Apply') {
-        when {
-            expression { Terraform_Command.equals("Terraform Apply") }
-        }
-        steps {
-            sh 'terraform apply --auto-approve'
-        }
-    }
+    // stage ('Apply') {
+    //     when {
+    //         expression { Terraform_Command.equals("Terraform Apply") }
+    //     }
+    //     steps {
+    //         sh 'terraform apply --auto-approve'
+    //     }
+    // }
 
-    stage ('Destroy') {
-        when {
-            expression { Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") }
-        }
-        steps {
-            sh 'terraform destroy --auto-approve'
-        }
-    }
+    // stage ('Destroy') {
+    //     when {
+    //         expression { Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") }
+    //     }
+    //     steps {
+    //         sh 'terraform destroy --auto-approve'
+    //     }
+    // }
 
    }
 }

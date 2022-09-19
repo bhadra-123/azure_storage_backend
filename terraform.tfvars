@@ -3,15 +3,15 @@
 #--------
 
 Owner       = "bhadrareddy.origin@gmail.com"
-Reason      = "Ticket-12345"
-Environment = "Dev"
+Reason      = "ticket-12345"
+Environment = "dev"
 location_short = "eu"
 
 #----------------
 # RESOURCE GROUP
 #----------------
 
-resource_group_name = "terraform_backend_rg"
+resource_group_name = "rg"
 location            = "East US"
 
 #----------------
