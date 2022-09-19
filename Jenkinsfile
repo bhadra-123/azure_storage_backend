@@ -53,7 +53,7 @@ pipeline {
                 az account set -s $ARM_SUBSCRIPTION_ID
                 az account show
                 echo $ARM_SUBSCRIPTION_ID
-                terraform init -var Environment='"'$Environment'"'
+                terraform init
               '''          
             }
           }
@@ -66,7 +66,7 @@ pipeline {
           steps {
             script {
               sh '''
-                terraform plan
+                terraform plan -var Environment='"'$Environment'"'
               '''          
             }
           }
