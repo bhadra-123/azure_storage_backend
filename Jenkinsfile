@@ -28,26 +28,28 @@ pipeline {
         stage ('DEV ENV') { 
           when {
             expression { Environment.equals("dev") }
-          }          
-          environment {
-            ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-            ARM_TENANT_ID           = credentials("TENANT_ID")
-            ARM_CLIENT_ID           = credentials("CLIENT_ID")
-            ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET") 
+          }
+          steps {  
+            environment {
+              ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+              ARM_TENANT_ID           = credentials("TENANT_ID")
+              ARM_CLIENT_ID           = credentials("CLIENT_ID")
+              ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET") 
+            }
           }
         }
 
-        stage ('PROD ENV') { 
-          when {
-            expression { Environment.equals("prod") }
-          }          
-          environment {
-            ARM_SUBSCRIPTION_ID     = credentials("SPOKE_SUBSCRIPTION_ID")
-            ARM_TENANT_ID           = credentials("TENANT_ID")
-            ARM_CLIENT_ID           = credentials("CLIENT_ID")
-            ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET") 
-          }
-        }        
+        // stage ('PROD ENV') { 
+        //   when {
+        //     expression { Environment.equals("prod") }
+        //   }          
+        //   environment {
+        //     ARM_SUBSCRIPTION_ID     = credentials("SPOKE_SUBSCRIPTION_ID")
+        //     ARM_TENANT_ID           = credentials("TENANT_ID")
+        //     ARM_CLIENT_ID           = credentials("CLIENT_ID")
+        //     ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET") 
+        //   }
+        // }        
 
         stage ('Init') {
           steps {
