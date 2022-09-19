@@ -25,18 +25,17 @@ pipeline {
         ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
       }
       stages {
-          
-        stage ('DEV ENV') { 
-          when {
-            expression { Terraform_Command.equals("Terraform Plan") && Environment.equals("dev") } 
-          } 
-          environment {
-            ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+
+        stage ('Dev Env') {
+          if ( Environment.equals("dev") ) {
+            environment {
+              ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+            }
+            steps {
+              echo "ARM_SUBSCRIPTION_ID = ${env.ARM_SUBSCRIPTION_ID}" 
+            }
           }
-          steps {
-            echo "ARM_SUBSCRIPTION_ID = ${env.ARM_SUBSCRIPTION_ID}" 
-          }
-        }
+        }        
 
         // stage ('PROD ENV') { 
         //   when {
