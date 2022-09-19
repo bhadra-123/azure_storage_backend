@@ -52,7 +52,7 @@ pipeline {
                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
                 az account set -s $ARM_SUBSCRIPTION_ID
                 az account show
-                printenv
+                echo $ARM_SUBSCRIPTION_ID
                 terraform init
               '''          
             }
