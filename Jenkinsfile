@@ -14,75 +14,63 @@ pipeline {
     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
   }
 
-  stages {
-
-    stage("Environment") {
-      environment {
-        ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-        SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
-        ARM_TENANT_ID           = credentials("TENANT_ID")
-        ARM_CLIENT_ID           = credentials("CLIENT_ID")
-        ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
-      }
-      stages {
-
-        stage ('Dev Env') {
-          if ( Environment.equals("dev") ) {
-            environment {
-              ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-            }
-            steps {
-              echo "ARM_SUBSCRIPTION_ID = ${env.ARM_SUBSCRIPTION_ID}" 
-            }
-          }
-        }        
-
-        // stage ('PROD ENV') { 
-        //   when {
-        //     expression { Environment.equals("prod") }
-        //   }          
-        //   environment {
-        //     ARM_SUBSCRIPTION_ID     = credentials("SPOKE_SUBSCRIPTION_ID")
-        //     ARM_TENANT_ID           = credentials("TENANT_ID")
-        //     ARM_CLIENT_ID           = credentials("CLIENT_ID")
-        //     ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET") 
-        //   }
-        // }        
-
-        stage ('Init') {
-          steps {
-            script {
-              sh '''
-                az account clear
-                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                az account set -s $ARM_SUBSCRIPTION_ID
-                az account show
-                printenv
-                terraform init
-              '''          
-            }
-          }
-        }    
-
-        stage ('Plan') {
-          when {
-            expression { Terraform_Command.equals("Terraform Plan") }
-          }      
-          steps {
-            script {
-              sh '''
-                terraform plan -var Environment=$Environment
-              '''          
-            }
-          }
-        }
-
-      }    
-    }
+  environment {
+    ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+    SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
+    ARM_TENANT_ID           = credentials("TENANT_ID")
+    ARM_CLIENT_ID           = credentials("CLIENT_ID")
+    ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
   }
+
+  stages {
+    
+    stage ('Dev Env') {
+      if ( Environment.equals("dev") ) {
+        environment {
+          ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+        }
+        steps {
+          echo "ARM_SUBSCRIPTION_ID = ${env.ARM_SUBSCRIPTION_ID}" 
+        }
+      }
+    }              
+
+    stage ('Init') {
+      steps {
+        script {
+          sh '''
+            az account clear
+            az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+            az account set -s $ARM_SUBSCRIPTION_ID
+            az account show
+            printenv
+            terraform init
+          '''          
+        }
+      }
+    }    
+
+    stage ('Plan') {
+      when {
+        expression { Terraform_Command.equals("Terraform Plan") }
+      }      
+      steps {
+        script {
+          sh '''
+            terraform plan -var Environment=$Environment
+          '''          
+        }
+      }
+    }
+
+  }    
 }
 
-// Working Pipeline -1
+
+//////////////////////////
+// Working Pipeline -1  //
+//////////////////////////
+
 // pipeline {
 
 //   agent any
