@@ -20,16 +20,16 @@ pipeline {
       steps {
         script {
           if (Environment.equals("dev")) {
-            ARM_SUBSCRIPTION_ID = credentials("HUB_SUBSCRIPTION_ID")
-            ARM_TENANT_ID       = credentials("TENANT_ID")
-            ARM_CLIENT_ID       = credentials("CLIENT_ID")
-            ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")             
+            K = credentials("HUB_SUBSCRIPTION_ID")
+            L = credentials("TENANT_ID")
+            M = credentials("CLIENT_ID")
+            N = credentials("CLIENT_SECRET")             
           }
           else if (Environment.equals("prod")) {
-            ARM_SUBSCRIPTION_ID = credentials("SPOKE_SUBSCRIPTION_ID")
-            ARM_TENANT_ID       = credentials("TENANT_ID")
-            ARM_CLIENT_ID       = credentials("CLIENT_ID")
-            ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")  
+            W = credentials("HUB_SUBSCRIPTION_ID")
+            X = credentials("TENANT_ID")
+            Y = credentials("CLIENT_ID")
+            Z = credentials("CLIENT_SECRET")   
           }  
         }
       }
