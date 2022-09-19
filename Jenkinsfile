@@ -18,14 +18,16 @@ pipeline {
 
     stage("Environment") {
       environment {
-        ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-        ARM_TENANT_ID           = credentials("TENANT_ID")
-        ARM_CLIENT_ID           = credentials("CLIENT_ID")
-        ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")
-        TF_VAR_SUBSCRIPTION_ID  = credentials("SPOKE_SUBSCRIPTION_ID")
-        TF_VAR_TENANT_ID        = credentials("TENANT_ID")
-        TF_VAR_CLIENT_ID        = credentials("CLIENT_ID")
-        TF_VAR_CLIENT_SECRET    = credentials("CLIENT_SECRET")             
+        // ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+        // TF_VAR_SUBSCRIPTION_ID  = credentials("SPOKE_SUBSCRIPTION_ID") 
+        // ARM_TENANT_ID           = credentials("TENANT_ID")
+        // ARM_CLIENT_ID           = credentials("CLIENT_ID")
+        // ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")
+        SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+        //TF_VAR_SUBSCRIPTION_ID  = credentials("SPOKE_SUBSCRIPTION_ID") 
+        TENANT_ID           = credentials("TENANT_ID")
+        CLIENT_ID           = credentials("CLIENT_ID")
+        CLIENT_SECRET       = credentials("CLIENT_SECRET")               
       }
       stages {
 
@@ -34,8 +36,8 @@ pipeline {
             script {
               sh '''
                 az account clear
-                az login --service-principal -u $TF_VAR_CLIENT_ID -p $TF_VAR_CLIENT_SECRET -t $TF_VAR_TENANT_ID
-                az account set -s $TF_VAR_SUBSCRIPTION_ID
+                az login --service-principal -u $CLIENT_ID -p $CLIENT_SECRET -t $TENANT_ID
+                az account set -s $SUBSCRIPTION_ID
                 az account show
                 printenv
                 terraform init
