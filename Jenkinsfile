@@ -28,8 +28,8 @@ pipeline {
           
         stage ('DEV ENV') { 
           when {
-            expression { Environment.equals('dev') }
-          }
+            expression { Terraform_Command.equals("Terraform Plan") }
+          } 
           environment {
             ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
           }
