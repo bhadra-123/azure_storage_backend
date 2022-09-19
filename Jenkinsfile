@@ -16,31 +16,16 @@ pipeline {
 
   stages {
 
-    stage("Getting Environment Variables") {
-      steps {
-        script {
-          if (Environment.equals("dev")) {
-            K = credentials("HUB_SUBSCRIPTION_ID")
-            L = credentials("TENANT_ID")
-            M = credentials("CLIENT_ID")
-            N = credentials("CLIENT_SECRET")             
-          }
-          else if (Environment.equals("prod")) {
-            W = credentials("HUB_SUBSCRIPTION_ID")
-            X = credentials("TENANT_ID")
-            Y = credentials("CLIENT_ID")
-            Z = credentials("CLIENT_SECRET")   
-          }  
-        }
-      }
-    }
-
-    stage("Setting Environment Variables") {
+    stage("Environment") {
       environment {
-        ARM_SUBSCRIPTION_ID = credentials("HUB_SUBSCRIPTION_ID")
-        ARM_TENANT_ID       = credentials("TENANT_ID")
-        ARM_CLIENT_ID       = credentials("CLIENT_ID")
-        ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")         
+        ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+        ARM_TENANT_ID           = credentials("TENANT_ID")
+        ARM_CLIENT_ID           = credentials("CLIENT_ID")
+        ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")
+        TF_VAR_SUBSCRIPTION_ID  = credentials("SPOKE_SUBSCRIPTION_ID")
+        TF_VAR_TENANT_ID        = credentials("TENANT_ID")
+        TF_VAR_CLIENT_ID        = credentials("CLIENT_ID")
+        TF_VAR_CLIENT_SECRET    = credentials("CLIENT_SECRET")             
       }
       stages {
 
@@ -52,11 +37,6 @@ pipeline {
                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
                 az account set -s $ARM_SUBSCRIPTION_ID
                 az account show
-                echo $K
-                echo $L
-                echo $M
-                echo $N
-                printenv
                 terraform init
               '''          
             }
