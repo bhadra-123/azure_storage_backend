@@ -3,17 +3,21 @@ pipeline {
   agent any
 
   options {
+    buildDiscarder(logRotator(numToKeepStr:'10'))
+    timeout(time: 5, unit: 'MINUTES')
     ansiColor('xterm')
   }
 
   parameters{
-    choice(name: 'Terraform_Command', choices: 'Terraform Plan\nTerraform Apply\nTerraform Destroy', description: 'Select Terraform Operation')
+    choice(name: 'Terraform_Command', choices: 'Terraform Plan\nTerraform Apply\nTerraform Destroy'),
+    choice(name: 'Azure_Environment', choices: 'dev\nprod'),
     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
   }
 
   environment {
+    ARM_SUBSCRIPTION_ID = credentials("HUB_SUBSCRIPTION_ID")
+    //TF_VAR_tenant_id    = credentials("SPOKE_SUBSCRIPTION_ID")
     ARM_TENANT_ID       = credentials("TENANT_ID")
-    ARM_SUBSCRIPTION_ID = credentials("SUBSCRIPTION_ID")
     ARM_CLIENT_ID       = credentials("CLIENT_ID")
     ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")
   }

@@ -1,13 +1,11 @@
 #--------
 # LOCALS
 #--------
-variable "client_name" {}
+variable "Owner" {}
 
-variable "environment" {}
+variable "Reason" {}
 
-variable "creator" {}
-
-variable "location_short" {}
+variable "Environment" {}
 
 #----------------
 # RESOURCE GROUP
