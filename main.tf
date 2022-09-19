@@ -14,7 +14,7 @@ resource "random_string" "myrandom" {
 #----------------
 
 resource "azurerm_resource_group" "resource_group" {
-  name     = "${local.resource_prefix}-${var.resource_group_name}"
+  name     = lower("${local.resource_prefix}-${var.resource_group_name}")
   location = var.location
   tags     = local.common_tags
 }
