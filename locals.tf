@@ -1,5 +1,5 @@
 locals {
-  resource_prefix = "${var.environment}-${var.location_short}"
+  resource_prefix = "${var.Environment}-${var.location_short}"
   Owner       = var.Owner
   Reason      = var.Reason
   Environment = var.Environment
