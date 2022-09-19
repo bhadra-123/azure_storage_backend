@@ -56,6 +56,7 @@ pipeline {
                 echo $L
                 echo $M
                 echo $N
+                printenv
                 terraform init
               '''          
             }
