@@ -30,9 +30,6 @@ pipeline {
       stages {
 
         stage ('Dev Init') {
-          when {
-            expression { Environment.equals("dev") }
-          } 
           steps {
             script {
               sh '''
@@ -45,25 +42,7 @@ pipeline {
               '''          
             }
           }
-        }
-
-        stage ('Prod Init') {
-          when {
-            expression { Environment.equals("prod") }
-          } 
-          steps {
-            script {
-              sh '''
-                az account clear
-                az login --service-principal -u $TF_VAR_CLIENT_ID -p $TF_VAR_CLIENT_SECRET -t $TF_VAR_TENANT_ID
-                az account set -s $TF_VAR_SUBSCRIPTION_ID
-                az account show
-                printenv
-                terraform init
-              '''          
-            }
-          }
-        }        
+        }    
 
         stage ('Plan') {
           when {
