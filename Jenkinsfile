@@ -9,8 +9,8 @@ pipeline {
   }
 
   parameters{
-    choice(name: 'Terraform_Command', choices: 'Terraform Plan\nTerraform Apply\nTerraform Destroy'),
-    choice(name: 'Azure_Environment', choices: 'dev\nprod'),
+    choice(name: 'Terraform_Command', choices: 'Terraform Plan\nTerraform Apply\nTerraform Destroy')
+    choice(name: 'Azure_Environment', choices: 'dev\nprod')
     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
   }
 
