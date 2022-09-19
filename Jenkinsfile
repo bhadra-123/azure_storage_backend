@@ -34,8 +34,8 @@ pipeline {
             script {
               sh '''
                 az account clear
-                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                az account set -s $ARM_SUBSCRIPTION_ID
+                az login --service-principal -u $TF_VAR_CLIENT_ID -p $TF_VAR_CLIENT_SECRET -t $TF_VAR_TENANT_ID
+                az account set -s $TF_VAR_SUBSCRIPTION_ID
                 az account show
                 printenv
                 terraform init
