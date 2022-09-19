@@ -1,3 +1,11 @@
+//////////////////////////
+// Testing Pipeline -1  //
+//////////////////////////
+
+@Library('jenkins-shared-library') _
+
+def environmentVariables = [:]
+
 pipeline {
 
   agent any
@@ -14,103 +22,71 @@ pipeline {
     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
   }
 
-  environment {
-    ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-    SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
-    ARM_TENANT_ID           = credentials("TENANT_ID")
-    ARM_CLIENT_ID           = credentials("CLIENT_ID")
-    ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
-  }
-
   stages {
 
-    // stage ('Dev Env') {
-    //   if ( Environment.equals("dev") ) {
-    //     environment {
-    //       ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-    //     }
-    //     steps {
-    //       echo "ARM_SUBSCRIPTION_ID = ${env.ARM_SUBSCRIPTION_ID}" 
-    //     }
-    //   }
-    // }
+    stage ("Getting Environment Variables") {
+      steps {
+        script {
 
-    stage('Set environment') {
-        when {
-          expression { Environment.equals("dev") }
-        } 
-        steps {
-            withEnv(['ENV1=newvalue']) {
-                sh "echo $ENV1" // prints newvalue
-            }
-            // override with variable
+          environmentVariables.hubCreds   = GetJenkinsSecretIds(environmentVariables.environment, "hub")
+          environmentVariables.spokeCreds = GetJenkinsSecretIds(environmentVariables.environment, "spoke")
+
+          if (Environment.equals("dev")) {
+            environmentVariables.SUBSCRIPTION_ID = environmentVariables.hubCreds.SUBSCRIPTION_ID
+          }
+          else if (Environment.equals("prod")) {
+            environmentVariables.SUBSCRIPTION_ID = environmentVariables.spokeCreds.SUBSCRIPTION_ID              
+          }
+        }
+      }
+    }
+
+    stage("Setting Environment Variables") {
+      environment {
+        ARM_SUBSCRIPTION_ID = credentials("${environmentVariables.SUBSCRIPTION_ID}")
+        ARM_TENANT_ID       = credentials("TENANT_ID")
+        ARM_CLIENT_ID       = credentials("CLIENT_ID")
+        ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")         
+      }
+      stages {
+
+        stage ('Init') {
+          steps {
             script {
-                def newEnv1 = 'new1'
-                withEnv(['ENV1=' + newEnv1]) {
-                    sh "echo $ENV1" // prints new1
-                }
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $ARM_SUBSCRIPTION_ID
+                az account show
+                printenv
+                terraform init
+              '''          
             }
+          }
         }
-    }                  
 
-    stage ('Init') {
-      steps {
-        script {
-          sh '''
-            az account clear
-            az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-            az account set -s $ARM_SUBSCRIPTION_ID
-            az account show
-            printenv
-            terraform init
-          '''          
+        stage ('Plan') {
+          when {
+            expression { Terraform_Command.equals("Terraform Plan") }
+          }      
+          steps {
+            script {
+              sh '''
+                terraform plan
+              '''          
+            }
+          }
         }
-      }
-    }    
 
-    stage ('Plan') {
-      when {
-        expression { Terraform_Command.equals("Terraform Plan") }
-      }      
-      steps {
-        script {
-          sh '''
-            terraform plan -var Environment=$Environment
-          '''          
-        }
-      }
+      }    
     }
-
-  }    
+  }
 }
 
-pipeline {
-    agent { label 'docker' }
-    environment {
-        ENV1 = 'default'
-    }
-    stages {
-        stage('Set environment') {
-            steps {
-                sh "echo $ENV1" // prints default
-                // override with hardcoded value
-                withEnv(['ENV1=newvalue']) {
-                    sh "echo $ENV1" // prints newvalue
-                }
-                // override with variable
-                script {
-                    def newEnv1 = 'new1'
-                    withEnv(['ENV1=' + newEnv1]) {
-                        sh "echo $ENV1" // prints new1
-                    }
-                }
-            }
-        }
-    }
-}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////
-// Working Pipeline -1  //
+/////////////////////////
+// Working Pipeline -2  //
 //////////////////////////
 
 // pipeline {
@@ -129,50 +105,52 @@ pipeline {
 //     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
 //   }
 
+//   environment {
+//     ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+//     SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
+//     ARM_TENANT_ID           = credentials("TENANT_ID")
+//     ARM_CLIENT_ID           = credentials("CLIENT_ID")
+//     ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
+//   }
+
 //   stages {
 
-//     stage("Environment") {
-//       environment {
-//         ARM_SUBSCRIPTION_ID = credentials("HUB_SUBSCRIPTION_ID")
-//         ARM_TENANT_ID       = credentials("TENANT_ID")
-//         ARM_CLIENT_ID       = credentials("CLIENT_ID")
-//         ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")         
+//     stage ('Init') {
+//       steps {
+//         script {
+//           sh '''
+//             az account clear
+//             az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+//             az account set -s $ARM_SUBSCRIPTION_ID
+//             az account show
+//             printenv
+//             terraform init
+//           '''          
+//         }
 //       }
-//       stages {
+//     }    
 
-//         stage ('Init') {
-//           steps {
-//             script {
-//               sh '''
-//                 az account clear
-//                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-//                 az account set -s $ARM_SUBSCRIPTION_ID
-//                 az account show
-//                 printenv
-//                 terraform init
-//               '''          
-//             }
-//           }
+//     stage ('Plan') {
+//       when {
+//         expression { Terraform_Command.equals("Terraform Plan") }
+//       }      
+//       steps {
+//         script {
+//           sh '''
+//             terraform plan -var Environment=$Environment
+//           '''          
 //         }
-
-//         stage ('Plan') {
-//           when {
-//             expression { Terraform_Command.equals("Terraform Plan") }
-//           }      
-//           steps {
-//             script {
-//               sh '''
-//                 terraform plan
-//               '''          
-//             }
-//           }
-//         }
-
-//       }    
+//       }
 //     }
-//   }
+
+//   }    
 // }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////
+// Non Working Pipeline -1  //
+//////////////////////////////
 
 // import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
@@ -226,67 +204,3 @@ pipeline {
 //   }
 
 // }  
-
-
-
-//Backup
-
-// pipeline {
-
-//   agent any
-
-//   options {
-//     buildDiscarder(logRotator(numToKeepStr:'10'))
-//     timeout(time: 5, unit: 'MINUTES')
-//     ansiColor('xterm')
-//   }
-
-//   parameters{
-//     choice(name: 'Terraform_Command', choices: 'Terraform Plan\nTerraform Apply\nTerraform Destroy')
-//     choice(name: 'Environment', choices: 'dev\nprod')
-//     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
-//   }
-
-//   environment {
-//     ARM_SUBSCRIPTION_ID = credentials("HUB_SUBSCRIPTION_ID")
-//     ARM_TENANT_ID       = credentials("TENANT_ID")
-//     ARM_CLIENT_ID       = credentials("CLIENT_ID")
-//     ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")
-//   }
-
-//   stages {
-
-//     stage ('Init') {
-//       steps {
-//         script {
-//           sh '''
-//             az account clear
-//             az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-//             az account set -s $ARM_SUBSCRIPTION_ID
-//             az account show
-//             printenv
-//             terraform init
-//           '''          
-//         }
-//       }
-//     }
-
-//     stage ('Plan') {
-//       when {
-//         expression { Terraform_Command.equals("Terraform Plan") }
-//       }      
-//       steps {
-//         script {
-//           sh '''
-//             terraform plan
-//           '''          
-//         }
-//       }
-//     }    
-
-//   }
-// }
-
-
-
-
