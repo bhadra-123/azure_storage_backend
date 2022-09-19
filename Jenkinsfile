@@ -23,17 +23,35 @@ pipeline {
   }
 
   stages {
-    
-    stage ('Dev Env') {
-      if ( Environment.equals("dev") ) {
-        environment {
-          ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-        }
+
+    // stage ('Dev Env') {
+    //   if ( Environment.equals("dev") ) {
+    //     environment {
+    //       ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+    //     }
+    //     steps {
+    //       echo "ARM_SUBSCRIPTION_ID = ${env.ARM_SUBSCRIPTION_ID}" 
+    //     }
+    //   }
+    // }
+
+    stage('Set environment') {
+        when {
+          expression { Environment.equals("dev") }
+        } 
         steps {
-          echo "ARM_SUBSCRIPTION_ID = ${env.ARM_SUBSCRIPTION_ID}" 
+            withEnv(['ENV1=newvalue']) {
+                sh "echo $ENV1" // prints newvalue
+            }
+            // override with variable
+            script {
+                def newEnv1 = 'new1'
+                withEnv(['ENV1=' + newEnv1]) {
+                    sh "echo $ENV1" // prints new1
+                }
+            }
         }
-      }
-    }              
+    }                  
 
     stage ('Init') {
       steps {
@@ -66,6 +84,30 @@ pipeline {
   }    
 }
 
+pipeline {
+    agent { label 'docker' }
+    environment {
+        ENV1 = 'default'
+    }
+    stages {
+        stage('Set environment') {
+            steps {
+                sh "echo $ENV1" // prints default
+                // override with hardcoded value
+                withEnv(['ENV1=newvalue']) {
+                    sh "echo $ENV1" // prints newvalue
+                }
+                // override with variable
+                script {
+                    def newEnv1 = 'new1'
+                    withEnv(['ENV1=' + newEnv1]) {
+                        sh "echo $ENV1" // prints new1
+                    }
+                }
+            }
+        }
+    }
+}
 
 //////////////////////////
 // Working Pipeline -1  //
