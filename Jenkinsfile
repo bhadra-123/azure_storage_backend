@@ -22,7 +22,12 @@ node {
                 '''  
             }
           }
-          init "${ARM_SUBSCRIPTION_ID}"
+          if ( Azure_Environment.equals("dev") ) {
+            init "${ARM_SUBSCRIPTION_ID}"
+          }
+          else {
+            init "${TF_VAR_SUBSCRIPTION_ID}"
+          }
 
         //   stage('Init') {
         //     script {
