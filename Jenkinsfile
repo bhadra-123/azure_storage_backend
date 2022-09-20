@@ -148,18 +148,38 @@ pipeline {
       }
     }
 
-    stage ('Plan') {
-      when {
-        expression { Terraform_Command.equals("Terraform Plan") }
-      }      
+    stage('Plan') {
       steps {
-        script {
-          sh '''
-            terraform plan -var Environment=$AzureEnv
-          '''          
+        withCredentials(
+          [
+            string(credentialsId: 'CLIENT_ID', variable: 'ARM_CLIENT_ID'),
+            string(credentialsId: 'CLIENT_SECRET', variable: 'ARM_CLIENT_SECRET'),
+            string(credentialsId: 'TENANT_ID', variable: 'ARM_TENANT_ID'),
+            string(credentialsId: 'HUB_SUBSCRIPTION_ID', variable: 'ARM_SUBSCRIPTION_ID'),
+            string(credentialsId: 'SPOKE_SUBSCRIPTION_ID', variable: 'TF_VAR_SUBSCRIPTION_ID')
+          ]
+        ) {
+          script {
+            if ( AzureEnv.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $ARM_SUBSCRIPTION_ID
+                terraform plan -var Environment=$AzureEnv
+              '''   
+            }
+            else {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $TF_VAR_SUBSCRIPTION_ID
+                terraform plan -var Environment=$AzureEnv
+              '''                
+            }
+          }
         }
       }
-    }
+    }    
 
   }    
 }
