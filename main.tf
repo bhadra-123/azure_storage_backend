@@ -27,7 +27,7 @@ resource "azurerm_storage_account" "blob_storage_account" {
   depends_on = [
     azurerm_resource_group.resource_group
   ]
-  name                     = replace("${local.resource_prefix}-${var.blob_storage_account_name}-${random_string.myrandom.id}", "-", "")
+  name                     = replace("${local.resource_prefix}${var.blob_storage_account_name}${random_string.myrandom.id}", "-", "")
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = var.blob_storage_account_tier
