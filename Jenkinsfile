@@ -102,84 +102,53 @@ node {
       ansiColor('xterm') {
 
         stage('Init') {
-          steps {
-            script {
-              if ( Azure_Environment.equals("dev") ) {
-                sh '''
-                  az account clear
-                  az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                  az account set -s $ARM_SUBSCRIPTION_ID
-                  az account show
-                  printenv
-                  terraform init
-                '''   
-              }
-              else {
-                sh '''
-                  az account clear
-                  az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                  az account set -s $TF_VAR_SUBSCRIPTION_ID
-                  az account show
-                  terraform init
-                '''                 
-              }
+          script {
+            if ( Azure_Environment.equals("dev") ) {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $ARM_SUBSCRIPTION_ID
+                az account show
+                printenv
+                terraform init
+              '''   
+            }
+            else {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $TF_VAR_SUBSCRIPTION_ID
+                az account show
+                terraform init
+              '''                 
             }
           }
         }
 
         stage ('Plan') {
-          steps {
-            script {
-              if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
-                sh '''
-                  az account clear
-                  az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                  az account set -s $ARM_SUBSCRIPTION_ID
-                  az account show
-                  terraform plan -var Environment=$Azure_Environment
-                '''   
-              }
-              else {
-                sh '''
-                  az account clear
-                  az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                  az account set -s $TF_VAR_SUBSCRIPTION_ID
-                  az account show
-                  terraform plan -var Environment=$Azure_Environment
-                '''                
-              }
+          script {
+            if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $ARM_SUBSCRIPTION_ID
+                az account show
+                terraform plan -var Environment=$Azure_Environment
+              '''   
+            }
+            else {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $TF_VAR_SUBSCRIPTION_ID
+                az account show
+                terraform plan -var Environment=$Azure_Environment
+              '''                
             }
           }
         }
-
-            //  stage ('Plan') {
-            //     if ( Terraform_Command.equals("Terraform Plan") ) {
-            //         script {
-            //           sh '''
-            //             terraform plan -var Environment=$Azure_Environment
-            //           '''  
-            //         }
-            //     }
-            //  }
-
-            //  stage ('Apply') {
-            //     if ( Terraform_Command.equals("Terraform Apply") ) {
-            //         script {
-            //             sh 'terraform apply --auto-approve'
-            //         }
-            //     }
-            //  }
-
-            //  stage ('Destroy') {
-            //     if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
-            //         script {
-            //             sh 'terraform destroy --auto-approve'
-            //         }
-            //     }
-            //  }
-
       }
-  }
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
