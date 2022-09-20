@@ -16,7 +16,6 @@ node {
               checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
               if ( Azure_Environment.equals("dev") ) {
                 sh '''
-                  rm -r ./.terraform
                   az account clear
                   az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
                   az account set -s $ARM_SUBSCRIPTION_ID
@@ -26,7 +25,6 @@ node {
               }
               else {
                 sh '''
-                  rm -r ./.terraform
                   az account clear
                   az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
                   az account set -s $TF_VAR_SUBSCRIPTION_ID
