@@ -105,26 +105,11 @@ pipeline {
 
   parameters{
     choice(name: 'Terraform_Command', choices: 'Terraform Plan\nTerraform Apply\nTerraform Destroy')
-    choice(name: 'Environment', choices: 'dev\nprod')
+    choice(name: 'AzureEnv', choices: 'dev\nprod')
     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
   }
 
-  stages {
-
-    // stage ('Init') {
-    //   steps {
-    //     script {
-    //       sh '''
-    //         az account clear
-    //         az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-    //         az account set -s $ARM_SUBSCRIPTION_ID
-    //         az account show
-    //         printenv
-    //         terraform init
-    //       '''          
-    //     }
-    //   }
-    // }    
+  stages {  
 
     stage('Init') {
       steps {
@@ -138,7 +123,7 @@ pipeline {
           ]
         ) {
           script {
-            if ( Environment.equals("dev") ) {
+            if ( AzureEnv.equals("dev") ) {
               sh '''
                 az account clear
                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
@@ -148,16 +133,16 @@ pipeline {
                 terraform init
               '''   
             }
-            else {
-              sh '''
-                az account clear
-                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                az account set -s $TF_VAR_SUBSCRIPTION_ID
-                az account show
-                printenv
-                terraform init
-              '''                 
-            }
+            // else {
+            //   sh '''
+            //     az account clear
+            //     az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+            //     az account set -s $TF_VAR_SUBSCRIPTION_ID
+            //     az account show
+            //     printenv
+            //     terraform init
+            //   '''                 
+            // }
           }
         }
       }
