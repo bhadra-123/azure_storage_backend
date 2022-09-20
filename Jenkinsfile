@@ -10,87 +10,100 @@ node {
       withEnv(["git_url=https://github.com/bhadra-123/terraform_storage_backend"]) {
 
         ansiColor('xterm') {
-
-          stage('Init') {
-            script {
+          stage('checkout') {
               checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
-              if ( Azure_Environment.equals("dev") ) {
-                sh '''
+          }
+          stage('azlogin') {
+            script {
+              sh '''
                   az account clear
                   az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                  az account set -s $ARM_SUBSCRIPTION_ID
                   az account show
-                  terraform init
-                '''   
-              }
-              else {
-                sh '''
-                  az account clear
-                  az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                  az account set -s $TF_VAR_SUBSCRIPTION_ID
-                  az account show
-                  terraform init
-                '''                 
-              }
+                '''  
             }
           }
+          init "${ARM_SUBSCRIPTION_ID}"
 
-          stage ('Plan') {
-            script {
-              if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
-                sh '''
-                  az account set -s $ARM_SUBSCRIPTION_ID
-                  az account show
-                  terraform plan -var Environment=$Azure_Environment
-                '''   
-              }
-              else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Plan") ) {
-                sh '''
-                  az account set -s $TF_VAR_SUBSCRIPTION_ID
-                  az account show
-                  terraform plan -var Environment=$Azure_Environment
-                '''                
-              }
-            }
-          }
+        //   stage('Init') {
+        //     script {
+        //       checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
+        //       if ( Azure_Environment.equals("dev") ) {
+        //         sh '''
+        //           az account clear
+        //           az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+        //           az account set -s $ARM_SUBSCRIPTION_ID
+        //           az account show
+        //           terraform init
+        //         '''   
+        //       }
+        //       else {
+        //         sh '''
+        //           az account clear
+        //           az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+        //           az account set -s $TF_VAR_SUBSCRIPTION_ID
+        //           az account show
+        //           terraform init
+        //         '''                 
+        //       }
+        //     }
+        //   }
 
-          stage ('Apply') {
-            script {
-              if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Apply") ) {
-                sh '''
-                  az account set -s $ARM_SUBSCRIPTION_ID
-                  az account show
-                  terraform apply --auto-approve -var Environment=$Azure_Environment
-                '''   
-              }
-              else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Apply") ) {
-                sh '''
-                  az account set -s $TF_VAR_SUBSCRIPTION_ID
-                  az account show
-                  terraform apply --auto-approve -var Environment=$Azure_Environment
-                '''                
-              }
-            }
-          }
+        //   stage ('Plan') {
+        //     script {
+        //       if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
+        //         sh '''
+        //           az account set -s $ARM_SUBSCRIPTION_ID
+        //           az account show
+        //           terraform plan -var Environment=$Azure_Environment
+        //         '''   
+        //       }
+        //       else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Plan") ) {
+        //         sh '''
+        //           az account set -s $TF_VAR_SUBSCRIPTION_ID
+        //           az account show
+        //           terraform plan -var Environment=$Azure_Environment
+        //         '''                
+        //       }
+        //     }
+        //   }
 
-          stage ('Destroy') {
-            script {
-              if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
-                sh '''
-                  az account set -s $ARM_SUBSCRIPTION_ID
-                  az account show
-                  terraform destroy --auto-approve -var Environment=$Azure_Environment
-                '''   
-              }
-              else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Destroy") ) {
-                sh '''
-                  az account set -s $TF_VAR_SUBSCRIPTION_ID
-                  az account show
-                  terraform destroy --auto-approve -var Environment=$Azure_Environment
-                '''                
-              }
-            }
-          }        
+        //   stage ('Apply') {
+        //     script {
+        //       if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Apply") ) {
+        //         sh '''
+        //           az account set -s $ARM_SUBSCRIPTION_ID
+        //           az account show
+        //           terraform apply --auto-approve -var Environment=$Azure_Environment
+        //         '''   
+        //       }
+        //       else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Apply") ) {
+        //         sh '''
+        //           az account set -s $TF_VAR_SUBSCRIPTION_ID
+        //           az account show
+        //           terraform apply --auto-approve -var Environment=$Azure_Environment
+        //         '''                
+        //       }
+        //     }
+        //   }
+
+        //   stage ('Destroy') {
+        //     script {
+        //       if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
+        //         sh '''
+        //           az account set -s $ARM_SUBSCRIPTION_ID
+        //           az account show
+        //           terraform destroy --auto-approve -var Environment=$Azure_Environment
+        //         '''   
+        //       }
+        //       else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Destroy") ) {
+        //         sh '''
+        //           az account set -s $TF_VAR_SUBSCRIPTION_ID
+        //           az account show
+        //           terraform destroy --auto-approve -var Environment=$Azure_Environment
+        //         '''                
+        //       }
+        //     }
+        //   }        
         }
       } 
     }
