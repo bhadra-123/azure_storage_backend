@@ -109,15 +109,6 @@ pipeline {
     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
   }
 
-
-  environment {
-    ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-    SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
-    ARM_TENANT_ID           = credentials("TENANT_ID")
-    ARM_CLIENT_ID           = credentials("CLIENT_ID")
-    ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
-  }
-
   stages {
 
     // stage ('Init') {
