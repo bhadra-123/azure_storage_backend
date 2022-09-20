@@ -147,7 +147,7 @@ pipeline {
           ]
         ) {
           script {
-            if ( Environment.equals("${env.Environment}") ) {
+            if ( Environment.equals("dev") ) {
               sh '''
                 az account clear
                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
