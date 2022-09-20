@@ -44,7 +44,7 @@ node {
                   terraform plan -var Environment=$Azure_Environment
                 '''   
               }
-              else {
+              else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Plan") ) {
                 sh '''
                   az account set -s $TF_VAR_SUBSCRIPTION_ID
                   az account show
@@ -63,7 +63,7 @@ node {
                   terraform apply --auto-approve -var Environment=$Azure_Environment
                 '''   
               }
-              else {
+              else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Apply") ) {
                 sh '''
                   az account set -s $TF_VAR_SUBSCRIPTION_ID
                   az account show
@@ -82,7 +82,7 @@ node {
                   terraform destroy --auto-approve -var Environment=$Azure_Environment
                 '''   
               }
-              else {
+              else if ( Azure_Environment.equals("prod") && Terraform_Command.equals("Terraform Destroy") ) {
                 sh '''
                   az account set -s $TF_VAR_SUBSCRIPTION_ID
                   az account show
