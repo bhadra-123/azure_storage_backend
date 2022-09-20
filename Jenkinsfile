@@ -133,16 +133,16 @@ pipeline {
                 terraform init
               '''   
             }
-            // else {
-            //   sh '''
-            //     az account clear
-            //     az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-            //     az account set -s $TF_VAR_SUBSCRIPTION_ID
-            //     az account show
-            //     printenv
-            //     terraform init
-            //   '''                 
-            // }
+            else {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $TF_VAR_SUBSCRIPTION_ID
+                az account show
+                printenv
+                terraform init
+              '''                 
+            }
           }
         }
       }
