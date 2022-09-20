@@ -11,7 +11,7 @@ node {
 
         stage('Init') {
           script {
-            if ( Environment.equals("dev") ) {
+            if ( Azure_Environment.equals("dev") ) {
               sh '''
                 az account clear
                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
@@ -34,13 +34,13 @@ node {
 
         stage ('Plan') {
           script {
-            if ( Environment.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
+            if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
               sh '''
                 az account clear
                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
                 az account set -s $ARM_SUBSCRIPTION_ID
                 az account show
-                terraform plan -var Environment=$Environment
+                terraform plan -var Environment=$Azure_Environment
               '''   
             }
             else {
@@ -49,7 +49,7 @@ node {
                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
                 az account set -s $TF_VAR_SUBSCRIPTION_ID
                 az account show
-                terraform plan -var Environment=$Environment
+                terraform plan -var Environment=$Azure_Environment
               '''                
             }
           }
