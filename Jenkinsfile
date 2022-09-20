@@ -66,6 +66,23 @@ node {
           }
         }
 
+        stage ('Apply') {
+          script {
+            if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Apply") ) {
+              sh '''
+                az account set -s $ARM_SUBSCRIPTION_ID
+                terraform apply --auto-approve -var Environment=$Azure_Environment
+              '''   
+            }
+            else {
+              sh '''
+                az account set -s $TF_VAR_SUBSCRIPTION_ID
+                terraform apply --auto-approve -var Environment=$Azure_Environment
+              '''                
+            }
+          }
+        }        
+
       }
     }
 }

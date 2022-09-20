@@ -17,7 +17,7 @@ location            = "East US"
 # BLOB CONTAINER
 #----------------
 
-blob_storage_account_name             = "terraformbackendstorage"
+blob_storage_account_name             = "storage"
 blob_storage_account_tier             = "Standard"
 blob_storage_account_replication_type = "LRS"
 blob_storage_account_kind             = "StorageV2"
