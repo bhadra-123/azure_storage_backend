@@ -112,7 +112,7 @@ pipeline {
 
   environment {
     ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
-    SPOKE_SUBSCRIPTION_ID     = credentials("SPOKE_SUBSCRIPTION_ID")
+    SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
     ARM_TENANT_ID           = credentials("TENANT_ID")
     ARM_CLIENT_ID           = credentials("CLIENT_ID")
     ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
@@ -143,11 +143,29 @@ pipeline {
             string(credentialsId: 'CLIENT_SECRET', variable: 'ARM_CLIENT_SECRET'),
             string(credentialsId: 'TENANT_ID', variable: 'ARM_TENANT_ID'),
             string(credentialsId: 'ARM_SUBSCRIPTION_ID', variable: 'ARM_SUBSCRIPTION_ID'),
+            string(credentialsId: 'SPOKE_SUBSCRIPTION_ID', variable: 'SPOKE_SUBSCRIPTION_ID')
           ]
         ) {
           script {
-            if ( Environment.equals("env.Environment") ) {
-              sh 'terraform init'
+            if ( Environment.equals("${env.Environment}") ) {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $ARM_SUBSCRIPTION_ID
+                az account show
+                printenv
+                terraform init
+              '''   
+            }
+            else {
+              sh '''
+                az account clear
+                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                az account set -s $SPOKE_SUBSCRIPTION_ID
+                az account show
+                printenv
+                terraform init
+              '''                 
             }
           }
         }
