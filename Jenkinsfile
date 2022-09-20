@@ -109,50 +109,50 @@ pipeline {
     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
   }
 
-  config = [
-    "dev": [
-      SUBSCRIPTION_ID : "HUB_SUBSCRIPTION_ID",
-      TENANT_ID       : "TENANT_ID",
-      CLIENT_ID       : "CLIENT_ID",
-      CLIENT_SECRET   : "CLIENT_SECRET"
-    ],
-    "prod": [
-      SUBSCRIPTION_ID : "SPOKE_SUBSCRIPTION_ID",
-      TENANT_ID       : "TENANT_ID",
-      CLIENT_ID       : "CLIENT_ID",
-      CLIENT_SECRET   : "CLIENT_SECRET"
-    ],
-  ]
 
-  //Environment         = env.Environment ? env.Environment : "dev"
-  ARM_SUBSCRIPTION_ID = env.SUBSCRIPTION_ID ? config.find{ it.key == env.SUBSCRIPTION_ID }?.value.SUBSCRIPTION_ID : config["dev"].SUBSCRIPTION_ID
-  ARM_TENANT_ID = env.TENANT_ID ? config.find{ it.key == env.TENANT_ID }?.value.TENANT_ID : config["dev"].TENANT_ID
-  ARM_CLIENT_ID = env.CLIENT_ID ? config.find{ it.key == env.CLIENT_ID }?.value.CLIENT_ID : config["dev"].CLIENT_ID
-  ARM_CLIENT_SECRET = env.CLIENT_SECRET ? config.find{ it.key == env.CLIENT_SECRET }?.value.CLIENT_SECRET : config["dev"].CLIENT_SECRET  
-
-  // environment {
-  //   ARM_SUBSCRIPTION_ID     = credentials("SUBSCRIPTION_ID")
-  //   ARM_TENANT_ID           = credentials("TENANT_ID")
-  //   ARM_CLIENT_ID           = credentials("CLIENT_ID")
-  //   ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
-  // }
+  environment {
+    ARM_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID")
+    SPOKE_SUBSCRIPTION_ID     = credentials("SPOKE_SUBSCRIPTION_ID")
+    ARM_TENANT_ID           = credentials("TENANT_ID")
+    ARM_CLIENT_ID           = credentials("CLIENT_ID")
+    ARM_CLIENT_SECRET       = credentials("CLIENT_SECRET")               
+  }
 
   stages {
 
-    stage ('Init') {
+    // stage ('Init') {
+    //   steps {
+    //     script {
+    //       sh '''
+    //         az account clear
+    //         az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+    //         az account set -s $ARM_SUBSCRIPTION_ID
+    //         az account show
+    //         printenv
+    //         terraform init
+    //       '''          
+    //     }
+    //   }
+    // }    
+
+    stage('Init') {
       steps {
-        script {
-          sh '''
-            az account clear
-            az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-            az account set -s $ARM_SUBSCRIPTION_ID
-            az account show
-            printenv
-            terraform init
-          '''          
+        withCredentials(
+          [
+            string(credentialsId: 'CLIENT_ID', variable: 'ARM_CLIENT_ID'),
+            string(credentialsId: 'CLIENT_SECRET', variable: 'ARM_CLIENT_SECRET'),
+            string(credentialsId: 'TENANT_ID', variable: 'ARM_TENANT_ID'),
+            string(credentialsId: 'ARM_SUBSCRIPTION_ID', variable: 'ARM_SUBSCRIPTION_ID'),
+          ]
+        ) {
+          script {
+            if ( Environment.equals("env.Environment") ) {
+              sh 'terraform init'
+            }
+          }
         }
       }
-    }    
+    }
 
     stage ('Plan') {
       when {
