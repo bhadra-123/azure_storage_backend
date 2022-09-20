@@ -36,8 +36,6 @@ node {
           script {
             if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
               sh '''
-                az account clear
-                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
                 az account set -s $ARM_SUBSCRIPTION_ID
                 az account show
                 terraform plan -var Environment=$Azure_Environment
@@ -45,8 +43,6 @@ node {
             }
             else {
               sh '''
-                az account clear
-                az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
                 az account set -s $TF_VAR_SUBSCRIPTION_ID
                 az account show
                 terraform plan -var Environment=$Azure_Environment
@@ -54,6 +50,30 @@ node {
             }
           }
         }
+
+        // stage ('Apply') {
+        //   script {
+        //     if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Apply") ) {
+        //       sh '''
+        //         az account clear
+        //         az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+        //         az account set -s $ARM_SUBSCRIPTION_ID
+        //         az account show
+        //         terraform apply --auto-approve -var Environment=$Azure_Environment
+        //       '''   
+        //     }
+        //     else {
+        //       sh '''
+        //         az account clear
+        //         az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+        //         az account set -s $TF_VAR_SUBSCRIPTION_ID
+        //         az account show
+        //         terraform apply --auto-approve -var Environment=$Azure_Environment
+        //       '''                
+        //     }
+        //   }
+        // }
+
       }
     }
 }
@@ -148,3 +168,9 @@ node {
 //     }
 //   }
 // }
+
+
+                // az account clear
+                // az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
+                // az account set -s $ARM_SUBSCRIPTION_ID
+                // az account show
