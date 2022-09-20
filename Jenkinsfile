@@ -142,8 +142,8 @@ pipeline {
             string(credentialsId: 'CLIENT_ID', variable: 'ARM_CLIENT_ID'),
             string(credentialsId: 'CLIENT_SECRET', variable: 'ARM_CLIENT_SECRET'),
             string(credentialsId: 'TENANT_ID', variable: 'ARM_TENANT_ID'),
-            string(credentialsId: 'ARM_SUBSCRIPTION_ID', variable: 'ARM_SUBSCRIPTION_ID'),
-            string(credentialsId: 'SPOKE_SUBSCRIPTION_ID', variable: 'SPOKE_SUBSCRIPTION_ID')
+            string(credentialsId: 'HUB_SUBSCRIPTION_ID', variable: 'ARM_SUBSCRIPTION_ID'),
+            string(credentialsId: 'SPOKE_SUBSCRIPTION_ID', variable: 'TF_VAR_SUBSCRIPTION_ID')
           ]
         ) {
           script {
@@ -161,7 +161,7 @@ pipeline {
               sh '''
                 az account clear
                 az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID
-                az account set -s $SPOKE_SUBSCRIPTION_ID
+                az account set -s $TF_VAR_SUBSCRIPTION_ID
                 az account show
                 printenv
                 terraform init
