@@ -33,9 +33,13 @@ pipeline {
 
           if (Environment.equals("dev")) {
             environmentVariables.SUBSCRIPTION_ID = environmentVariables.hubCreds.SUBSCRIPTION_ID
+            environmentVariables.CLIENT_ID = environmentVariables.hubCreds.CLIENT_ID
+            environmentVariables.CLIENT_SECRET = environmentVariables.hubCreds.CLIENT_SECRET
           }
           else if (Environment.equals("prod")) {
-            environmentVariables.SUBSCRIPTION_ID = environmentVariables.spokeCreds.SUBSCRIPTION_ID              
+            environmentVariables.SUBSCRIPTION_ID = environmentVariables.spokeCreds.SUBSCRIPTION_ID 
+            environmentVariables.CLIENT_ID = environmentVariables.spokeCreds.CLIENT_ID 
+            environmentVariables.CLIENT_SECRET = environmentVariables.spokeCreds.CLIENT_SECRET              
           }
         }
       }
@@ -43,10 +47,10 @@ pipeline {
 
     stage("Setting Environment Variables") {
       environment {
+        ARM_TENANT_ID       = credentials("TENANT_ID")        
         ARM_SUBSCRIPTION_ID = credentials("${environmentVariables.SUBSCRIPTION_ID}")
-        ARM_TENANT_ID       = credentials("TENANT_ID")
-        ARM_CLIENT_ID       = credentials("CLIENT_ID")
-        ARM_CLIENT_SECRET   = credentials("CLIENT_SECRET")         
+        ARM_CLIENT_ID       = credentials("${environmentVariables.CLIENT_ID}")
+        ARM_CLIENT_SECRET   = credentials("${environmentVariables.CLIENT_SECRET}")         
       }
       stages {
 
