@@ -40,12 +40,14 @@ node {
               if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Plan") ) {
                 sh '''
                   az account set -s $ARM_SUBSCRIPTION_ID
+                  az account show
                   terraform plan -var Environment=$Azure_Environment
                 '''   
               }
               else {
                 sh '''
                   az account set -s $TF_VAR_SUBSCRIPTION_ID
+                  az account show
                   terraform plan -var Environment=$Azure_Environment
                 '''                
               }
@@ -57,12 +59,14 @@ node {
               if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Apply") ) {
                 sh '''
                   az account set -s $ARM_SUBSCRIPTION_ID
+                  az account show
                   terraform apply --auto-approve -var Environment=$Azure_Environment
                 '''   
               }
               else {
                 sh '''
                   az account set -s $TF_VAR_SUBSCRIPTION_ID
+                  az account show
                   terraform apply --auto-approve -var Environment=$Azure_Environment
                 '''                
               }
@@ -74,12 +78,14 @@ node {
               if ( Azure_Environment.equals("dev") && Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
                 sh '''
                   az account set -s $ARM_SUBSCRIPTION_ID
+                  az account show
                   terraform destroy --auto-approve -var Environment=$Azure_Environment
                 '''   
               }
               else {
                 sh '''
                   az account set -s $TF_VAR_SUBSCRIPTION_ID
+                  az account show
                   terraform destroy --auto-approve -var Environment=$Azure_Environment
                 '''                
               }

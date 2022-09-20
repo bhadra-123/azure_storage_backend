@@ -28,8 +28,8 @@ resource "azurerm_storage_account" "blob_storage_account" {
     azurerm_resource_group.resource_group
   ]
   name                     = lower(replace("${local.resource_prefix}-${var.blob_storage_account_name}-${random_string.myrandom.id}", "-", ""))
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
+  resource_group_name      = azurerm_resource_group.resource_group.name
+  location                 = azurerm_resource_group.resource_group.location
   account_tier             = var.blob_storage_account_tier
   account_replication_type = var.blob_storage_account_replication_type
   account_kind             = var.blob_storage_account_kind
