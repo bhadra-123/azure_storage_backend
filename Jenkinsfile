@@ -17,7 +17,7 @@ node {
     withEnv(["git_url=https://github.com/bhadra-123/terraform_storage_backend"]) {
 
       ansiColor('xterm') {
-
+        
         properties ([
             parameters ([
                 choice(name: 'Terraform_Command', choices: 'Terraform Plan\nTerraform Apply\nTerraform Destroy'),
