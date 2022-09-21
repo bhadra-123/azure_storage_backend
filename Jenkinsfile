@@ -33,7 +33,9 @@ pipeline {
   stages {
 
     stage('GIT Checkout') {
-      checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
+      steps {
+        checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
+      }
     }       
 
     if ( Azure_Environment.equals("dev") ) {
