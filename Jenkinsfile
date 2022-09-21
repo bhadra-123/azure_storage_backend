@@ -40,22 +40,20 @@ pipeline {
       }
     }       
 
-    // stage('GIT Checkout') {
-    //   steps {
-    //     script {
-    //       checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
-    //     }
-    //   }
-    // }
-
-    if ( Azure_Environment.equals("dev") ) {
-      TerrafromJenkins "${HUB_SUBSCRIPTION_ID}", "${HUB_CLIENT_ID}", "${HUB_CLIENT_SECRET}"
-    }
-    else if ( Azure_Environment.equals("qa") ) {
-      TerrafromJenkins "${COMPUTE_SUBSCRIPTION_ID}", "${COMPUTE_CLIENT_ID}", "${COMPUTE_CLIENT_SECRET}"
-    }
-    else if ( Azure_Environment.equals("prod") ) {
-      TerrafromJenkins "${SPOKE_SUBSCRIPTION_ID}", "${SPOKE_CLIENT_ID}", "${SPOKE_CLIENT_SECRET}"
+    stage('Call Groovy') {
+      steps {
+        script {
+          if ( Azure_Environment.equals("dev") ) {
+            TerrafromJenkins "${HUB_SUBSCRIPTION_ID}", "${HUB_CLIENT_ID}", "${HUB_CLIENT_SECRET}"
+          }
+          else if ( Azure_Environment.equals("qa") ) {
+            TerrafromJenkins "${COMPUTE_SUBSCRIPTION_ID}", "${COMPUTE_CLIENT_ID}", "${COMPUTE_CLIENT_SECRET}"
+          }
+          else if ( Azure_Environment.equals("prod") ) {
+            TerrafromJenkins "${SPOKE_SUBSCRIPTION_ID}", "${SPOKE_CLIENT_ID}", "${SPOKE_CLIENT_SECRET}"
+          }
+        }
+      }
     }
 
   }
