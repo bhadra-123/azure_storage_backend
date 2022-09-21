@@ -40,7 +40,7 @@ pipeline {
       }
     }
 
-    stage('Call Groovy') {
+    stage('Function Call') {
       steps {
         script {
           if ( Azure_Environment.equals("dev") ) {
@@ -60,6 +60,10 @@ pipeline {
 }
 
 void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
+
+  environment {
+    client_id=${CLI_ID}
+  }
 
   stage('Init') {
       script {
