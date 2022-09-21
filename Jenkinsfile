@@ -1,5 +1,3 @@
-@Library('jenkins-shared-library')_
-
 void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
 
   stage('Init') {
