@@ -34,9 +34,19 @@ pipeline {
 
     stage('GIT Checkout') {
       steps {
-        checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
+        script {
+          checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
+        }
       }
     }       
+
+    // stage('GIT Checkout') {
+    //   steps {
+    //     script {
+    //       checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
+    //     }
+    //   }
+    // }
 
     if ( Azure_Environment.equals("dev") ) {
       TerrafromJenkins "${HUB_SUBSCRIPTION_ID}", "${HUB_CLIENT_ID}", "${HUB_CLIENT_SECRET}"
