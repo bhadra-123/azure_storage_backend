@@ -79,15 +79,16 @@ node {
                       """   
                   }
               }
-          }                       
+          }
+        }                         
 
-          if ( Azure_Environment.equals("dev") ) {
-            call "${ARM_SUBSCRIPTION_ID}", "${ARM_CLIENT_ID}", "${ARM_CLIENT_SECRET}", "${Terraform_Command}"
-          }
-          else if ( Azure_Environment.equals("prod") ) {
-            call "${TF_VAR_SUBSCRIPTION_ID}", "${TF_VAR_CLIENT_ID}", "${TF_VAR_CLIENT_SECRET}", "${Terraform_Command}"
-          }
+        if ( Azure_Environment.equals("dev") ) {
+          call "${ARM_SUBSCRIPTION_ID}", "${ARM_CLIENT_ID}", "${ARM_CLIENT_SECRET}", "${Terraform_Command}"
         }
+        else if ( Azure_Environment.equals("prod") ) {
+          call "${TF_VAR_SUBSCRIPTION_ID}", "${TF_VAR_CLIENT_ID}", "${TF_VAR_CLIENT_SECRET}", "${Terraform_Command}"
+        }
+
       }
     } 
   }
