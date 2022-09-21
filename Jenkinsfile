@@ -14,8 +14,8 @@ node {
     string(credentialsId: 'SPOKE_CLIENT_SECRET', variable: 'TF_VAR_CLIENT_SECRET')    
   ]) 
   {
-    withEnv([ "git_url=https://github.com/bhadra-123/terraform_storage_backend"
-              "client_id=${CLI_ID}"
+    withEnv([ "git_url=https://github.com/bhadra-123/terraform_storage_backend",
+              "client_id=${CLI_ID}",
               "client_secret=${CLI_SEC}",
               "subscription_id=${SUB_ID}",
               "tenant_id=${ARM_TENANT_ID}"
