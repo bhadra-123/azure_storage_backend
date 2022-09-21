@@ -44,13 +44,13 @@ pipeline {
       steps {
         script {
           if ( Azure_Environment.equals("dev") ) {
-            call("${HUB_SUBSCRIPTION_ID}", "${HUB_CLIENT_ID}", "${HUB_CLIENT_SECRET}")
+            function("${HUB_SUBSCRIPTION_ID}", "${HUB_CLIENT_ID}", "${HUB_CLIENT_SECRET}")
           }
           else if ( Azure_Environment.equals("qa") ) {
-            call("${COMPUTE_SUBSCRIPTION_ID}", "${COMPUTE_CLIENT_ID}", "${COMPUTE_CLIENT_SECRET}")
+            function("${COMPUTE_SUBSCRIPTION_ID}", "${COMPUTE_CLIENT_ID}", "${COMPUTE_CLIENT_SECRET}")
           }
           else if ( Azure_Environment.equals("prod") ) {
-            call("${SPOKE_SUBSCRIPTION_ID}", "${SPOKE_CLIENT_ID}", "${SPOKE_CLIENT_SECRET}")
+            function("${SPOKE_SUBSCRIPTION_ID}", "${SPOKE_CLIENT_ID}", "${SPOKE_CLIENT_SECRET}")
           }
         }
       }
@@ -59,7 +59,7 @@ pipeline {
   }
 }
 
-void call(String SUB_ID, String CLI_ID, String CLI_SEC) {
+void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
 
   stage('Init') {
       script {
