@@ -61,18 +61,6 @@ pipeline {
 
 void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
 
-  environment {
-    client_id=${CLI_ID}
-  }
-
-  stage('Test') {
-      script {
-          sh """
-            echo $client_id
-          """   
-      }
-  }
-
   stage('Init') {
       script {
           sh """
