@@ -1,6 +1,7 @@
 #--------
 # LOCALS
 #--------
+
 variable "Owner" {}
 
 variable "Reason" {}
@@ -9,9 +10,22 @@ variable "Environment" {}
 
 variable "location_short" {}
 
+#-----------
+# PROVIDERS
+#-----------
+
+variable "subscription_id" {}
+
+variable "tenant_id" {}
+
+variable "client_id" {}
+
+variable "client_secret" {}
+
 #----------------
 # RESOURCE GROUP
 #----------------
+
 variable "resource_group_name" {}
 
 variable "location" {}
