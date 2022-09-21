@@ -24,21 +24,14 @@ node {
 
         stage('GIT Checkout') {
           checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GITHUB_PAT_TOKEN', url: "${git_url}"]]])
-        }
+        }       
 
         if ( Azure_Environment.equals("dev") ) {
-          GetJenkinsSecretIds ${ARM_SUBSCRIPTION_ID}, ${ARM_CLIENT_ID}, ${ARM_CLIENT_SECRET}, ${Terraform_Command}
+          GetJenkinsSecretIds "${ARM_SUBSCRIPTION_ID}", "${ARM_CLIENT_ID}", "${ARM_CLIENT_SECRET}", "${Terraform_Command}"
         }
         else if ( Azure_Environment.equals("prod") ) {
-          GetJenkinsSecretIds ${TF_VAR_SUBSCRIPTION_ID}, ${TF_VAR_CLIENT_ID}, ${TF_VAR_CLIENT_SECRET}, ${Terraform_Command}
-        }        
-
-        // if ( Azure_Environment.equals("dev") ) {
-        //   GetJenkinsSecretIds "${ARM_SUBSCRIPTION_ID}", "${ARM_CLIENT_ID}", "${ARM_CLIENT_SECRET}", "${Terraform_Command}"
-        // }
-        // else if ( Azure_Environment.equals("prod") ) {
-        //   GetJenkinsSecretIds "${TF_VAR_SUBSCRIPTION_ID}", "${TF_VAR_CLIENT_ID}", "${TF_VAR_CLIENT_SECRET}", "${Terraform_Command}"
-        // }
+          GetJenkinsSecretIds "${TF_VAR_SUBSCRIPTION_ID}", "${TF_VAR_CLIENT_ID}", "${TF_VAR_CLIENT_SECRET}", "${Terraform_Command}"
+        }
 
       }
     } 
