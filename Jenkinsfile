@@ -1,4 +1,4 @@
-@Library('jenkins-shared-library') _
+@Library('jenkins-shared-library')_
 
 pipeline {
 
@@ -40,64 +40,17 @@ pipeline {
       }
     }
 
-    def call(String SUB_ID, String CLI_ID, String CLI_SEC) {
-
-      stage('Init') {
-          script {
-              sh """
-                  cd ${workspace}/${Azure_Environment} 
-                  terraform init
-              """   
-          }
-      }
-
-      stage('Plan') {
-          script {
-              if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
-                  sh """
-                      cd ${workspace}/${Azure_Environment} 
-                      terraform plan  -var Environment=${Azure_Environment} -var client_id=${CLI_ID} -var client_secret=${CLI_SEC} -var subscription_id=${SUB_ID} -var tenant_id=${TENANT_ID} -var-file=./${Azure_Environment}.tfvars -out ./${Azure_Environment}_plan.txt
-                  """  
-              } 
-          }
-      }    
-
-      stage('Apply') {
-          script {
-              if ( Terraform_Command.equals("Terraform Apply") ) {
-                  sh """
-                      cd ${workspace}/${Azure_Environment} 
-                      terraform apply --auto-approve ./${Azure_Environment}_plan.txt
-                  """   
-              }
-          }
-      }
-      
-      stage('Destroy') {
-          script {
-              if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
-                  sh """
-                      cd ${workspace}/${Azure_Environment} 
-                      terraform plan -destroy -var Environment=${Azure_Environment} -var client_id=${CLI_ID} -var client_secret=${CLI_SEC} -var subscription_id=${SUB_ID} -var tenant_id=${TENANT_ID} -var-file=./${Azure_Environment}.tfvars -out=./${Azure_Environment}_destroy.tfplan
-                      terraform apply --auto-approve ./${Azure_Environment}_destroy.tfplan
-                  """   
-              }
-          }
-      }
-
-    }
-
     stage('Call Groovy') {
       steps {
         script {
           if ( Azure_Environment.equals("dev") ) {
-            call "${HUB_SUBSCRIPTION_ID}", "${HUB_CLIENT_ID}", "${HUB_CLIENT_SECRET}"
+            call("${HUB_SUBSCRIPTION_ID}", "${HUB_CLIENT_ID}", "${HUB_CLIENT_SECRET}")
           }
           else if ( Azure_Environment.equals("qa") ) {
-            call "${COMPUTE_SUBSCRIPTION_ID}", "${COMPUTE_CLIENT_ID}", "${COMPUTE_CLIENT_SECRET}"
+            call("${COMPUTE_SUBSCRIPTION_ID}", "${COMPUTE_CLIENT_ID}", "${COMPUTE_CLIENT_SECRET}")
           }
           else if ( Azure_Environment.equals("prod") ) {
-            call "${SPOKE_SUBSCRIPTION_ID}", "${SPOKE_CLIENT_ID}", "${SPOKE_CLIENT_SECRET}"
+            call("${SPOKE_SUBSCRIPTION_ID}", "${SPOKE_CLIENT_ID}", "${SPOKE_CLIENT_SECRET}")
           }
         }
       }
@@ -122,12 +75,59 @@ pipeline {
   }
 }
 
+def call(String SUB_ID, String CLI_ID, String CLI_SEC) {
+
+  stage('Init') {
+      script {
+          sh """
+              cd ${workspace}/${Azure_Environment} 
+              terraform init
+          """   
+      }
+  }
+
+  stage('Plan') {
+      script {
+          if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
+              sh """
+                  cd ${workspace}/${Azure_Environment} 
+                  terraform plan  -var Environment=${Azure_Environment} -var client_id=${CLI_ID} -var client_secret=${CLI_SEC} -var subscription_id=${SUB_ID} -var tenant_id=${TENANT_ID} -var-file=./${Azure_Environment}.tfvars -out ./${Azure_Environment}_plan.txt
+              """  
+          } 
+      }
+  }    
+
+  stage('Apply') {
+      script {
+          if ( Terraform_Command.equals("Terraform Apply") ) {
+              sh """
+                  cd ${workspace}/${Azure_Environment} 
+                  terraform apply --auto-approve ./${Azure_Environment}_plan.txt
+              """   
+          }
+      }
+  }
+  
+  stage('Destroy') {
+      script {
+          if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
+              sh """
+                  cd ${workspace}/${Azure_Environment} 
+                  terraform plan -destroy -var Environment=${Azure_Environment} -var client_id=${CLI_ID} -var client_secret=${CLI_SEC} -var subscription_id=${SUB_ID} -var tenant_id=${TENANT_ID} -var-file=./${Azure_Environment}.tfvars -out=./${Azure_Environment}_destroy.tfplan
+                  terraform apply --auto-approve ./${Azure_Environment}_destroy.tfplan
+              """   
+          }
+      }
+  }
+
+}
+
 
 /////////////////////////////////
 // Working Jenkinsfile Backup //
 ///////////////////////////////
 
-// @Library('jenkins-shared-library') _
+// @Library('jenkins-shared-library')_
 
 // node {
 //   withCredentials ([
