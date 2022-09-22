@@ -4,7 +4,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
     script {
       sh """
         cd ${workspace}/${Azure_Environment}
-        echo Environment      = ${Azure_Environment} >> ${Azure_Environment}.tfvars
+        echo Environment      = '"'${Azure_Environment}'"' >> ${Azure_Environment}.tfvars
         cat ${Azure_Environment}.tfvars
       """
     }
