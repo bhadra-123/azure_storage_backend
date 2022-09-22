@@ -3,8 +3,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
   stage('Init') {
       script {
           sh """
-            cd ${workspace}/${Azure_Environment}
-            terraform init
+            terraform -chdir=${workspace}/${Azure_Environment} init
           """   
       }
   }
@@ -13,8 +12,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
     script {
       if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
         sh """
-          terraform plan \
-            -chdir=${workspace}/${Azure_Environment} \
+          terraform -chdir=${workspace}/${Azure_Environment} plan \
             -var Environment=${Azure_Environment} \
             -var client_id=${CLI_ID} \
             -var client_secret=${CLI_SEC} \
