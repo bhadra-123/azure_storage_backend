@@ -17,7 +17,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
   stage ('Init') {
     script {
       sh """
-        terraform init
+        terraform init -upgrade
       """   
     }
   }
