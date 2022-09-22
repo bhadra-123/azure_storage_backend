@@ -3,7 +3,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
   stage ('Alter tfvars') {
     script {
       sh """
-        cd ${workspace}/${Azure_Environment}
+        cd ${workspace}/deployments/${Azure_Environment}
         echo Environment     = '"'${Azure_Environment}'"' >> ${Azure_Environment}.tfvars
         echo client_id       = '"'${CLI_ID}'"' >> ${Azure_Environment}.tfvars
         echo client_secret   = '"'${CLI_SEC}'"' >> ${Azure_Environment}.tfvars
@@ -17,7 +17,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
   stage ('Init') {
     script {
       sh """
-        terraform -chdir=${workspace}/${Azure_Environment} init
+        terraform init
       """   
     }
   }
@@ -26,9 +26,9 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
     script {
       if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
         sh """
-          terraform -chdir=${workspace}/${Azure_Environment} plan \
-            -var-file=./${Azure_Environment}.tfvars \
-            -out ./${Azure_Environment}_plan.txt
+          terraform plan \
+            -var-file=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}.tfvars \
+            -out ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
         """  
       } 
     }
@@ -38,7 +38,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
     script {
       if ( Terraform_Command.equals("Terraform Apply") ) {
         sh """
-          terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_plan.txt
+          terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
         """   
       }
     }
@@ -48,10 +48,10 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
     script {
       if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
           sh """
-            terraform -chdir=${workspace}/${Azure_Environment} plan -destroy \
+            terraform plan -destroy \
               -var-file=./${Azure_Environment}.tfvars \
-              -out=./${Azure_Environment}_destroy.tfplan
-            terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_destroy.tfplan
+              -out=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
+            terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
           """   
       }
     }
