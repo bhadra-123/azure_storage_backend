@@ -48,6 +48,6 @@ variable "blob_storage_account_is_hns_enabled" {}
 # BLOB CONTAINER
 #----------------
 
-variable "blob_storage_container_names" {}
+variable "blob_storage_container_name" {}
 
 variable "blob_storage_container_access_type" {}

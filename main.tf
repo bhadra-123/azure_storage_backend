@@ -45,7 +45,7 @@ resource "azurerm_storage_container" "blob_storage_container" {
   depends_on = [
     azurerm_storage_account.blob_storage_account
   ]
-  name                  = lower(replace("${local.resource_prefix}-${var.blob_storage_container_names}", "-", ""))
+  name                  = lower(replace("${local.resource_prefix}-${var.blob_storage_container_name}", "-", ""))
   storage_account_name  = azurerm_storage_account.blob_storage_account.name
   container_access_type = var.blob_storage_container_access_type
 }
