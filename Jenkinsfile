@@ -14,7 +14,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
       if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
         sh """
           terraform plan \
-            -chdir=./${workspace}/${Azure_Environment} \
+            -chdir=${workspace}/${Azure_Environment} \
             -var Environment=${Azure_Environment} \
             -var client_id=${CLI_ID} \
             -var client_secret=${CLI_SEC} \
