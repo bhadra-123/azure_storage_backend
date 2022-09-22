@@ -46,7 +46,7 @@ resource "azurerm_storage_container" "blob_storage_container" {
     azurerm_storage_account.blob_storage_account
   ]
   count                 = length(var.blob_storage_container_names)
-  name                  = lower(replace("${local.resource_prefix}-${var.blob_storage_container_names[count.index]}", "-", ""))
+  name                  = lower(replace("${local.resource_prefix}-${var.blob_storage_container_names}", "-", ""))
   storage_account_name  = azurerm_storage_account.blob_storage_account.name
   container_access_type = var.blob_storage_container_access_type
 }
