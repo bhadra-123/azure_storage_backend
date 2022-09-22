@@ -1,52 +1,56 @@
 void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
 
-  stage('Init') {
-      script {
-          sh """
-            terraform -chdir=${workspace}/${Azure_Environment} init
-          """   
-      }
-  }
-
-  stage('Plan') {
+  stage ('Alter tfvars') {
     script {
-      if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
-        sh """
-          terraform -chdir=${workspace}/${Azure_Environment} plan \
-            -var Environment=${Azure_Environment} \
-            -var client_id=${CLI_ID} \
-            -var client_secret=${CLI_SEC} \
-            -var subscription_id=${SUB_ID} \
-            -var tenant_id=${TENANT_ID} \
-            -var-file=./${Azure_Environment}.tfvars \
-            -out ./${Azure_Environment}_plan.txt
-        """  
-      } 
-    }
-  }    
+      sh """
+        cd ${workspace}/${Azure_Environment}
 
-  stage('Apply') {
-    script {
-      if ( Terraform_Command.equals("Terraform Apply") ) {
-        sh """
-          terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_plan.txt
-        """   
-      }
+        echo Environment      = ${Azure_Environment} >> ${Azure_Environment}.tfvars
+        echo client_id        = ${CLI_ID} >> ${Azure_Environment}.tfvars
+        echo client_secret    = ${CLI_SEC} >> ${Azure_Environment}.tfvars
+        echo subscription_id  = ${SUB_ID} >> ${Azure_Environment}.tfvars
+        echo tenant_id        = ${TENANT_ID} >> ${Azure_Environment}.tfvars
+        cat ${Azure_Environment}.tfvars
+      """
     }
   }
-  
-  stage('Destroy') {
-      script {
-          if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
-          sh """
-              terraform -chdir=${workspace}/${Azure_Environment} plan -destroy -var Environment=${Azure_Environment} -var client_id=${CLI_ID} -var client_secret=${CLI_SEC} -var subscription_id=${SUB_ID} -var tenant_id=${TENANT_ID} -var-file=./${Azure_Environment}.tfvars -out=./${Azure_Environment}_destroy.tfplan
-              terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_destroy.tfplan
-          """  
-          }
-      }
-  }
 
-  // stage('Destroy') {
+  // stage ('Init') {
+  //   script {
+  //     sh """
+  //       terraform -chdir=${workspace}/${Azure_Environment} init
+  //     """   
+  //   }
+  // }
+
+  // stage ('Plan') {
+  //   script {
+  //     if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
+  //       sh """
+  //         terraform -chdir=${workspace}/${Azure_Environment} plan \
+  //           -var Environment=${Azure_Environment} \
+  //           -var client_id=${CLI_ID} \
+  //           -var client_secret=${CLI_SEC} \
+  //           -var subscription_id=${SUB_ID} \
+  //           -var tenant_id=${TENANT_ID} \
+  //           -var-file=./${Azure_Environment}.tfvars \
+  //           -out ./${Azure_Environment}_plan.txt
+  //       """  
+  //     } 
+  //   }
+  // }    
+
+  // stage ('Apply') {
+  //   script {
+  //     if ( Terraform_Command.equals("Terraform Apply") ) {
+  //       sh """
+  //         terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_plan.txt
+  //       """   
+  //     }
+  //   }
+  // }
+
+  // stage ('Destroy') {
   //   script {
   //     if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
   //         sh """
@@ -58,13 +62,74 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
   //             -var tenant_id=${TENANT_ID} \
   //             -var-file=./${Azure_Environment}.tfvars \
   //             -out=./${Azure_Environment}_destroy.tfplan
-  //           terraform apply --auto-approve ./${Azure_Environment}_destroy.tfplan
+  //           terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_destroy.tfplan
   //         """   
   //     }
   //   }
   // }
 
 }
+
+////////////////
+//  BACKUP  ///
+//////////////
+
+// void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
+
+//   stage('Init') {
+//       script {
+//           sh """
+//             terraform -chdir=${workspace}/${Azure_Environment} init
+//           """   
+//       }
+//   }
+
+//   stage('Plan') {
+//     script {
+//       if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
+//         sh """
+//           terraform -chdir=${workspace}/${Azure_Environment} plan \
+//             -var Environment=${Azure_Environment} \
+//             -var client_id=${CLI_ID} \
+//             -var client_secret=${CLI_SEC} \
+//             -var subscription_id=${SUB_ID} \
+//             -var tenant_id=${TENANT_ID} \
+//             -var-file=./${Azure_Environment}.tfvars \
+//             -out ./${Azure_Environment}_plan.txt
+//         """  
+//       } 
+//     }
+//   }    
+
+//   stage('Apply') {
+//     script {
+//       if ( Terraform_Command.equals("Terraform Apply") ) {
+//         sh """
+//           terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_plan.txt
+//         """   
+//       }
+//     }
+//   }
+
+//   stage('Destroy') {
+//     script {
+//       if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
+//           sh """
+//             terraform -chdir=${workspace}/${Azure_Environment} plan -destroy \
+//               -var Environment=${Azure_Environment} \
+//               -var client_id=${CLI_ID} \
+//               -var client_secret=${CLI_SEC} \
+//               -var subscription_id=${SUB_ID} \
+//               -var tenant_id=${TENANT_ID} \
+//               -var-file=./${Azure_Environment}.tfvars \
+//               -out=./${Azure_Environment}_destroy.tfplan
+//             terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_destroy.tfplan
+//           """   
+//       }
+//     }
+//   }
+
+// }
 
 pipeline {
 
