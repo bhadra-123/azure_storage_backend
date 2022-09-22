@@ -2,8 +2,10 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
 
   stage ('Alter tfvars') {
     script {
+      sh """ 
+      cd ${workspace}/${Azure_Environment}
+      """
       sh '''
-        cd ${workspace}/${Azure_Environment}
         echo Environment      = '"'${Azure_Environment}'"' >> ${Azure_Environment}.tfvars
         echo client_id        = '"'${CLI_ID}'"' >> ${Azure_Environment}.tfvars
         echo client_secret    = '"'${CLI_SEC}'"' >> ${Azure_Environment}.tfvars
