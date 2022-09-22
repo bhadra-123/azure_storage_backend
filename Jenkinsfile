@@ -3,8 +3,8 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
   stage('Init') {
       script {
           sh """
-            terraform init \
-              -chdir=${workspace}/${Azure_Environment}
+            cd ${workspace}/${Azure_Environment}
+            terraform init
           """   
       }
   }
