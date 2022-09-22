@@ -49,7 +49,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
       if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
           sh """
             terraform plan -destroy \
-              -var-file=./${Azure_Environment}.tfvars \
+              -var-file=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}.tfvars \
               -out=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
             terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
           """   
