@@ -47,8 +47,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
               -var tenant_id=${TENANT_ID} \
               -var-file=./${Azure_Environment}.tfvars \
               -out=./${Azure_Environment}_destroy.tfplan
-            terraform apply --auto-approve \
-              ./${Azure_Environment}_destroy.tfplan
+            terraform apply --auto-approve ./${Azure_Environment}_destroy.tfplan
           """   
       }
     }
