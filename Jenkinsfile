@@ -2,15 +2,15 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
 
   stage ('Alter tfvars') {
     script {
-      sh """
+      sh '''
         cd ${workspace}/${Azure_Environment}
-        echo Environment      = "${Azure_Environment}" >> ${Azure_Environment}.tfvars
-        echo client_id        = "${CLI_ID}" >> ${Azure_Environment}.tfvars
-        echo client_secret    = "${CLI_SEC}" >> ${Azure_Environment}.tfvars
-        echo subscription_id  = "${SUB_ID}" >> ${Azure_Environment}.tfvars
-        echo tenant_id        = "${TENANT_ID}" >> ${Azure_Environment}.tfvars
+        echo Environment      = '"'${Azure_Environment}'"' >> ${Azure_Environment}.tfvars
+        echo client_id        = '"'${CLI_ID}'"' >> ${Azure_Environment}.tfvars
+        echo client_secret    = '"'${CLI_SEC}'"' >> ${Azure_Environment}.tfvars
+        echo subscription_id  = '"'${SUB_ID}'"' >> ${Azure_Environment}.tfvars
+        echo tenant_id        = '"'${TENANT_ID}'"' >> ${Azure_Environment}.tfvars
         cat ${Azure_Environment}.tfvars
-      """
+      '''
     }
   }
 
