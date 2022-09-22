@@ -29,7 +29,7 @@ void function(String SUB_ID, String CLI_ID, String CLI_SEC) {
     script {
       if ( Terraform_Command.equals("Terraform Apply") ) {
         sh """
-          terraform apply --auto-approve -chdir=${workspace}/${Azure_Environment} ./${Azure_Environment}_plan.txt
+          terraform -chdir=${workspace}/${Azure_Environment} apply --auto-approve ./${Azure_Environment}_plan.txt
         """   
       }
     }
