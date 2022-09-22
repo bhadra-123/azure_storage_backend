@@ -22,5 +22,5 @@ blob_storage_account_tier             = "Standard"
 blob_storage_account_replication_type = "LRS"
 blob_storage_account_kind             = "StorageV2"
 blob_storage_account_is_hns_enabled   = true
-blob_storage_container_names          = ["blob-container-1", "blob-container-2"]
+blob_storage_container_names          = ["blob-container"]
 blob_storage_container_access_type    = "private"
