@@ -24,3 +24,7 @@ blob_storage_account_kind             = "StorageV2"
 blob_storage_account_is_hns_enabled   = true
 blob_storage_container_name           = "blob-container"
 blob_storage_container_access_type    = "private"
+
+#---------------------
+# TFVARS FROM JENKINS
+#---------------------
