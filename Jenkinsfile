@@ -50,71 +50,61 @@ node {
         }       
 
         stage ('Alter tfvars') {
-          steps {
-            script {
-              sh """
-                cd ${workspace}/deployments/${Azure_Environment}
-                echo Environment     = '"'${Azure_Environment}'"' >> ${Azure_Environment}.tfvars
-                echo client_id       = '"'${CLIENT_ID}'"'         >> ${Azure_Environment}.tfvars
-                echo client_secret   = '"'${CLIENT_SECRET}'"'     >> ${Azure_Environment}.tfvars
-                echo subscription_id = '"'${SUBSCRIPTION_ID}'"'   >> ${Azure_Environment}.tfvars
-                echo tenant_id       = '"'${TENANT_ID}'"'         >> ${Azure_Environment}.tfvars
-                cat ${Azure_Environment}.tfvars
-              """
-            }
+          script {
+            sh """
+              cd ${workspace}/deployments/${Azure_Environment}
+              echo Environment     = '"'${Azure_Environment}'"' >> ${Azure_Environment}.tfvars
+              echo client_id       = '"'${CLIENT_ID}'"'         >> ${Azure_Environment}.tfvars
+              echo client_secret   = '"'${CLIENT_SECRET}'"'     >> ${Azure_Environment}.tfvars
+              echo subscription_id = '"'${SUBSCRIPTION_ID}'"'   >> ${Azure_Environment}.tfvars
+              echo tenant_id       = '"'${TENANT_ID}'"'         >> ${Azure_Environment}.tfvars
+              cat ${Azure_Environment}.tfvars
+            """
           }
         }
 
         stage ('Init') {
-          steps {
-            script {
+          script {
+            sh """
+              terraform init -upgrade
+            """   
+          }
+        }
+
+        stage ('Plan') {
+          script {
+            if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
               sh """
-                terraform init -upgrade
+                terraform plan \
+                  -var-file=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}.tfvars \
+                  -out ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
+              """  
+            } 
+          }
+        }    
+
+        stage ('Apply') {
+          script {
+            if ( Terraform_Command.equals("Terraform Apply") ) {
+              sh """
+                terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
               """   
             }
           }
         }
 
-        stage ('Plan') {
-          steps {
-            script {
-              if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
-                sh """
-                  terraform plan \
-                    -var-file=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}.tfvars \
-                    -out ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
-                """  
-              } 
-            }
-          }
-        }    
-
-        stage ('Apply') {
-          steps {
-            script {
-              if ( Terraform_Command.equals("Terraform Apply") ) {
-                sh """
-                  terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
-                """   
-              }
-            }
-          }
-        }
-
         stage ('Destroy') {
-          steps {
-            script {
-              if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
+          script {
+            if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
                 sh """
                   terraform plan -destroy \
                     -var-file=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}.tfvars \
                     -out=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
                   terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
                 """   
-              }
             }
           }
-        }        
+        }       
 
       }
     } 
