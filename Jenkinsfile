@@ -87,7 +87,7 @@ pipeline {
       steps {
         script {
           sh """
-            terraform init -upgrade
+            terraform -chdir=${workspace}/deployments/${Azure_Environment} init -upgrade
           """   
         }
       }
@@ -98,7 +98,7 @@ pipeline {
         script {
           if ( Terraform_Command.equals("Terraform Plan") ||  Terraform_Command.equals("Terraform Apply") || Terraform_Command.equals("Terraform Destroy") ) {
             sh """
-              terraform plan \
+              terraform -chdir=${workspace}/deployments/${Azure_Environment} plan \
                 -var-file=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}.tfvars \
                 -out ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
             """  
@@ -112,7 +112,7 @@ pipeline {
         script {
           if ( Terraform_Command.equals("Terraform Apply") ) {
             sh """
-              terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
+              terraform -chdir=${workspace}/deployments/${Azure_Environment} apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_plan.txt
             """   
           }
         }
@@ -124,7 +124,7 @@ pipeline {
         script {
           if ( Terraform_Command.equals("Terraform Destroy") && Destroy.equalsIgnoreCase("destroy") ) {
             sh """
-              terraform plan -destroy \
+              terraform -chdir=${workspace}/deployments/${Azure_Environment} plan -destroy \
                 -var-file=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}.tfvars \
                 -out=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
               terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
