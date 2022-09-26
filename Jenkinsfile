@@ -30,31 +30,39 @@ pipeline {
 
   stages {
 
+    // stage('Secret ID') {
+    //   steps {
+    //     script {
+    //       switch(Azure_Environment) {
+    //         case "dev":
+    //           SUBSCRIPTION_ID = "${HUB_SUBSCRIPTION_ID}"
+    //           CLIENT_ID       = "${HUB_CLIENT_ID}"
+    //           CLIENT_SECRET   = "${HUB_CLIENT_SECRET}"
+    //         break
+    //         case "qa":
+    //           SUBSCRIPTION_ID = "${COMPUTE_SUBSCRIPTION_ID}"
+    //           CLIENT_ID       = "${COMPUTE_CLIENT_ID}"
+    //           CLIENT_SECRET   = "${COMPUTE_CLIENT_SECRET}"
+    //         break
+    //         case "prod":
+    //           SUBSCRIPTION_ID = "${SPOKE_SUBSCRIPTION_ID}"
+    //           CLIENT_ID       = "${SPOKE_CLIENT_ID}"
+    //           CLIENT_SECRET   = "${SPOKE_CLIENT_SECRET}"
+    //         break        
+    //         default:
+    //           SUBSCRIPTION_ID = "${HUB_SUBSCRIPTION_ID}"
+    //           CLIENT_ID       = "${HUB_CLIENT_ID}"
+    //           CLIENT_SECRET   = "${HUB_CLIENT_SECRET}"
+    //         break 
+    //       }
+    //     }
+    //   }
+    // }
+
     stage('Secret ID') {
       steps {
         script {
-          switch(Azure_Environment) {
-            case "dev":
-              SUBSCRIPTION_ID = "${HUB_SUBSCRIPTION_ID}"
-              CLIENT_ID       = "${HUB_CLIENT_ID}"
-              CLIENT_SECRET   = "${HUB_CLIENT_SECRET}"
-            break
-            case "qa":
-              SUBSCRIPTION_ID = "${COMPUTE_SUBSCRIPTION_ID}"
-              CLIENT_ID       = "${COMPUTE_CLIENT_ID}"
-              CLIENT_SECRET   = "${COMPUTE_CLIENT_SECRET}"
-            break
-            case "prod":
-              SUBSCRIPTION_ID = "${SPOKE_SUBSCRIPTION_ID}"
-              CLIENT_ID       = "${SPOKE_CLIENT_ID}"
-              CLIENT_SECRET   = "${SPOKE_CLIENT_SECRET}"
-            break        
-            default:
-              SUBSCRIPTION_ID = "${HUB_SUBSCRIPTION_ID}"
-              CLIENT_ID       = "${HUB_CLIENT_ID}"
-              CLIENT_SECRET   = "${HUB_CLIENT_SECRET}"
-            break 
-          }
+          AzureJenkinsID "${Azure_Environment}"  
         }
       }
     }
