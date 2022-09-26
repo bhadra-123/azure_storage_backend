@@ -14,19 +14,19 @@ pipeline {
     string(name: 'Destroy', defaultValue: '', description: 'Confirm Destroy by typing the word "destroy"' )
   }
 
-  // environment {
-  //   TENANT_ID               = credentials("TENANT_ID")
-  //   HUB_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID") 
-  //   HUB_CLIENT_ID           = credentials("HUB_CLIENT_ID") 
-  //   HUB_CLIENT_SECRET       = credentials("HUB_CLIENT_SECRET") 
-  //   COMPUTE_SUBSCRIPTION_ID = credentials("COMPUTE_SUBSCRIPTION_ID") 
-  //   COMPUTE_CLIENT_ID       = credentials("COMPUTE_CLIENT_ID") 
-  //   COMPUTE_CLIENT_SECRET   = credentials("COMPUTE_CLIENT_SECRET")    
-  //   SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
-  //   SPOKE_CLIENT_ID         = credentials("SPOKE_CLIENT_ID") 
-  //   SPOKE_CLIENT_SECRET     = credentials("SPOKE_CLIENT_SECRET")
-  //   GIT_URL                 = "https://github.com/bhadra-123/azure_storage_backend"
-  // }
+  environment {
+    TENANT_ID               = credentials("TENANT_ID")
+    HUB_SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID") 
+    HUB_CLIENT_ID           = credentials("HUB_CLIENT_ID") 
+    HUB_CLIENT_SECRET       = credentials("HUB_CLIENT_SECRET") 
+    COMPUTE_SUBSCRIPTION_ID = credentials("COMPUTE_SUBSCRIPTION_ID") 
+    COMPUTE_CLIENT_ID       = credentials("COMPUTE_CLIENT_ID") 
+    COMPUTE_CLIENT_SECRET   = credentials("COMPUTE_CLIENT_SECRET")    
+    SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
+    SPOKE_CLIENT_ID         = credentials("SPOKE_CLIENT_ID") 
+    SPOKE_CLIENT_SECRET     = credentials("SPOKE_CLIENT_SECRET")
+    GIT_URL                 = "https://github.com/bhadra-123/azure_storage_backend"
+  }
 
   stages {
 
@@ -34,15 +34,10 @@ pipeline {
       steps {
         script {
           switch(Azure_Environment) {
-            // case "dev":
-            //   SUBSCRIPTION_ID = "${HUB_SUBSCRIPTION_ID}"
-            //   CLIENT_ID       = "${HUB_CLIENT_ID}"
-            //   CLIENT_SECRET   = "${HUB_CLIENT_SECRET}"
-            // break
             case "dev":
-              SUBSCRIPTION_ID     = credentials("HUB_SUBSCRIPTION_ID") 
-              CLIENT_ID           = credentials("HUB_CLIENT_ID") 
-              CLIENT_SECRET       = credentials("HUB_CLIENT_SECRET") 
+              SUBSCRIPTION_ID = "${HUB_SUBSCRIPTION_ID}"
+              CLIENT_ID       = "${HUB_CLIENT_ID}"
+              CLIENT_SECRET   = "${HUB_CLIENT_SECRET}"
             break            
             case "qa":
               SUBSCRIPTION_ID = "${COMPUTE_SUBSCRIPTION_ID}"
