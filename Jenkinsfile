@@ -127,7 +127,7 @@ pipeline {
               terraform -chdir=${workspace}/deployments/${Azure_Environment} plan -destroy \
                 -var-file=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}.tfvars \
                 -out=${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
-              terraform apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
+              terraform -chdir=${workspace}/deployments/${Azure_Environment} apply --auto-approve ${workspace}/deployments/${Azure_Environment}/${Azure_Environment}_destroy.tfplan
             """   
           }
         }
