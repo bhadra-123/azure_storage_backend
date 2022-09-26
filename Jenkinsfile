@@ -25,7 +25,7 @@ pipeline {
     SPOKE_SUBSCRIPTION_ID   = credentials("SPOKE_SUBSCRIPTION_ID")
     SPOKE_CLIENT_ID         = credentials("SPOKE_CLIENT_ID") 
     SPOKE_CLIENT_SECRET     = credentials("SPOKE_CLIENT_SECRET")
-    GIT_URL                 = "https://github.com/bhadra-123/azure_infrastructure_deployment"
+    GIT_URL                 = "https://github.com/bhadra-123/azure_storage_backend"
   }
 
   stages {
